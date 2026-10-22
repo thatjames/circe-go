@@ -25,7 +25,19 @@ It supports Linux and macOS.
 
 ## Usage
 
-Work in progress. The commands are documented here as they land.
+```sh
+circe list-key-templates                                  # Tink template names
+circe create-keyset --key-template AES256_GCM --out ks.json
+circe list-keyset --in ks.json                            # key IDs, types, statuses; no key material
+circe convert-keyset --in ks.json --out ks.bin --out-format binary
+```
+
+Keysets are read from `--in` (default stdin) and written to `--out`
+(default stdout) in Tink's `json` or `binary` format (`--in-format`,
+`--out-format`). `--out` never overwrites an existing file. Errors exit
+1; usage errors exit 2.
+
+More commands land as circe grows.
 
 ## Licence
 

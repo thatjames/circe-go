@@ -7,7 +7,7 @@ code:
   - go.mod
   - doc.go
 tags: [build, go]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T18:55:51Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:06:05Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -25,11 +25,11 @@ One Go module holds the circe CLI and its packages, so it installs with
   package comment; the code lives under `cmd/` and `internal/`.
 
 # Interfaces
-- Planned dependencies: `github.com/tink-crypto/tink-go/v2` for all key
-  operations, `github.com/spf13/cobra` for the CLI, and the tink-go KMS
-  extensions for [encrypted keysets](/kms/encrypted-keysets.md).
-- Entry point (planned): `cmd/circe`, see
-  [command surface](/cli/command-surface.md).
+- Dependencies: `github.com/tink-crypto/tink-go/v2` for all key
+  operations, `github.com/spf13/cobra` (with `spf13/pflag`) for the CLI,
+  `google.golang.org/protobuf` for the template protos, and (planned) the
+  tink-go KMS extensions for [encrypted keysets](/kms/encrypted-keysets.md).
+- Entry point: `cmd/circe`, see [command surface](/cli/command-surface.md).
 
 # Decisions
 - **Pure Go, no cgo** (user, 2026-10-22): static binaries, simple

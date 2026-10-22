@@ -2,11 +2,11 @@
 type: Feature
 title: Keyset I/O
 description: Reads and writes cleartext Tink keysets in Tink's JSON and binary formats through tink-go only; the hook for KMS-encrypted keysets.
-status: draft
+status: stable
 code:
   - internal/keysetio/**
 tags: [keyset, tink]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:10:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:06:05Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -23,7 +23,10 @@ keyset must be readable by circe. Tink's formats are the contract.
   encrypted instead; that path is described and built by
   [KMS-encrypted keysets](/kms/encrypted-keysets.md).
 - A keyset that does not parse in the given format is an error naming
-  the input and the format; nothing is written.
+  the input (its path, or `stdin`) and the format; nothing is written.
+- An empty input is an error too.
+- JSON keysets are written as tink-go writes them (one line), followed by
+  a newline.
 - Round trip: reading a keyset and writing it in the same format yields
   the same keyset (same key IDs, primary, statuses and key material).
 
@@ -33,6 +36,9 @@ keyset must be readable by circe. Tink's formats are the contract.
   [public keyset](/keyset/public-keyset.md),
   [inspect and convert](/keyset/inspect-convert.md).
 - Flags: [command surface](/cli/command-surface.md).
+- `keysetio.Format` (`json`, `binary`; a `pflag.Value`),
+  `keysetio.Read(r io.Reader, name string, f Format) (*keyset.Handle, error)`
+  and `keysetio.Write(w io.Writer, h *keyset.Handle, f Format) error`.
 
 # Decisions
 - **Tink keyset formats** (user, 2026-10-22): read and write Tink's JSON

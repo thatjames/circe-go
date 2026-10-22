@@ -2,11 +2,11 @@
 type: Feature
 title: Create keyset
 description: create-keyset writes a new Tink keyset with one enabled primary key from a named Tink key template.
-status: draft
+status: stable
 code:
   - internal/cli/create_keyset*.go
 tags: [keyset, cli]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:10:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:06:05Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
