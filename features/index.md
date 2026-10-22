@@ -16,7 +16,7 @@ okf_version: "0.2"
 
 * [Keyset I/O](/keyset/keyset-io.md) - Reads and writes Tink keysets in Tink's JSON and binary formats, cleartext or KMS-encrypted, through tink-go only.
 * [Key templates](/keyset/key-templates.md) - Maps Tink key template names (AES256_GCM, ECDSA_P256, ...) to tink-go templates for --key-template, and lists them.
-* [Keyset lifecycle](/keyset/lifecycle.md) - create-keyset, add-key, promote-key, rotate-keyset, enable-key, disable-key, destroy-key and delete-key manage keys in a Tink keyset.
+* [Keyset lifecycle](/keyset/lifecycle.md) - create-keyset, add-key, promote-key, enable-key, disable-key, destroy-key and delete-key manage keys in a Tink keyset.
 * [Inspect and convert keysets](/keyset/inspect-convert.md) - list-keyset shows a keyset's key info without key material, convert-keyset changes format or encryption, create-public-keyset extracts the public keyset.
 
 # KMS

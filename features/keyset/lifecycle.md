@@ -1,20 +1,19 @@
 ---
 type: Feature
 title: Keyset lifecycle
-description: create-keyset, add-key, promote-key, rotate-keyset, enable-key, disable-key, destroy-key and delete-key manage keys in a Tink keyset.
+description: create-keyset, add-key, promote-key, enable-key, disable-key, destroy-key and delete-key manage keys in a Tink keyset.
 status: draft
 code:
   - internal/cli/create_keyset*.go
   - internal/cli/add_key*.go
   - internal/cli/promote_key*.go
-  - internal/cli/rotate_keyset*.go
   - internal/cli/enable_key*.go
   - internal/cli/disable_key*.go
   - internal/cli/destroy_key*.go
   - internal/cli/delete_key*.go
 tags: [keyset, cli]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T18:32:00Z }
-verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:00:00Z }
+verified: { by: human:slimjim, at: 2026-10-22T19:00:00Z }
 ---
 
 # Intent
@@ -27,8 +26,6 @@ tink-go's `keyset.Manager`.
 - `add-key --key-template <NAME>` reads a keyset, adds a new enabled,
   non-primary key and writes the keyset.
 - `promote-key --key-id <ID>` makes an enabled key the primary.
-- `rotate-keyset --key-template <NAME>` adds a key and makes it primary
-  (add-key plus promote-key in one step).
 - `enable-key`, `disable-key`, `destroy-key`, `delete-key --key-id <ID>`
   change one key's status or remove it, with tink-go's rules: the primary
   cannot be disabled, destroyed or deleted; destroying wipes the key
@@ -46,7 +43,6 @@ tink-go's `keyset.Manager`.
 # Decisions
 - **All tinkey commands in scope** (user, 2026-10-22), built
   incrementally.
-- `rotate-keyset` is kept although Java tinkey deprecated it: it is a
-  convenience, and the CLI surface is free. *Open:* the user did not
-  confirm keeping it at the import (2026-10-22); decide before it is
-  built.
+- **No `rotate-keyset`** (user, 2026-10-22): rotating is `add-key` then
+  `promote-key`, explicitly. A combined command blurs which key is
+  primary and can confuse users; anyone who wants it can alias the two.
