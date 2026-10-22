@@ -24,7 +24,7 @@ func newListKeyset() *cobra.Command {
 		Use:   "list-keyset",
 		Short: "Show a keyset's key IDs, types and statuses, without key material",
 	}
-	in := addInFlags(cmd)
+	in := addInFlags(cmd, addKMSFlags(cmd, ""))
 	cmd.RunE = func(cmd *cobra.Command, _ []string) error {
 		h, err := in.read(cmd)
 		if err != nil {

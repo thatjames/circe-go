@@ -14,7 +14,7 @@ func newCreateKeyset() *cobra.Command {
 		Short: "Create a keyset with one primary key from a Tink key template",
 	}
 	cmd.Flags().StringVar(&name, "key-template", "", "Tink key template name (see list-key-templates)")
-	out := addOutFlags(cmd)
+	out := addOutFlags(cmd, addKMSFlags(cmd, ""))
 	cmd.RunE = func(cmd *cobra.Command, _ []string) error {
 		if err := required("key-template", name); err != nil {
 			return err

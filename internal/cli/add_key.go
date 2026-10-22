@@ -14,8 +14,9 @@ func newAddKey() *cobra.Command {
 		Short: "Add a new enabled, non-primary key from a Tink key template",
 	}
 	cmd.Flags().StringVar(&name, "key-template", "", "Tink key template name (see list-key-templates)")
-	in := addInFlags(cmd)
-	out := addOutFlags(cmd)
+	k := addKMSFlags(cmd, "")
+	in := addInFlags(cmd, k)
+	out := addOutFlags(cmd, k)
 	cmd.RunE = func(cmd *cobra.Command, _ []string) error {
 		if err := required("key-template", name); err != nil {
 			return err

@@ -11,8 +11,9 @@ func newCreatePublicKeyset() *cobra.Command {
 		Use:   "create-public-keyset",
 		Short: "Write the public keyset of a private signature, hybrid or JWT signature keyset",
 	}
-	in := addInFlags(cmd)
-	out := addOutFlags(cmd)
+	// The public keyset holds no secrets, so it is written in cleartext.
+	in := addInFlags(cmd, addKMSFlags(cmd, ""))
+	out := addOutFlags(cmd, nil)
 	cmd.RunE = func(cmd *cobra.Command, _ []string) error {
 		h, err := in.read(cmd)
 		if err != nil {

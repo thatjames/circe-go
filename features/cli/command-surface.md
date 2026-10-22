@@ -10,7 +10,7 @@ code:
   - internal/cli/keyset_flags.go
   - internal/cli/keyset_flags_test.go
 tags: [cli, cobra]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:06:05Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:45:23Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -59,6 +59,9 @@ formats, not with the Java tinkey CLI's command or flag spelling.
   (`keyset_flags.go`) and one file per subcommand.
 - `cli.Run(args, stdin, stdout, stderr) int` runs circe in-process; the
   tests of every command use it.
+- `addInFlags` and `addOutFlags` take the command's KMS flags (or nil);
+  with a master key URI they read and write encrypted keysets
+  ([encrypted keysets](/kms/encrypted-keysets.md)).
 
 # Decisions
 - **Binary name `circe`** (user, 2026-10-22).

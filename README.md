@@ -41,6 +41,29 @@ circe create-keyset --key-template ED25519 --out priv.json
 circe create-public-keyset --in priv.json --out pub.json
 ```
 
+### Encrypted keysets
+
+Every command takes `--master-key-uri` (and `--credential`, a credentials
+file) to read and write keysets encrypted with a KMS key, as Tink does:
+
+```sh
+circe create-keyset --key-template AES256_GCM \
+  --master-key-uri gcp-kms://projects/p/locations/global/keyRings/r/cryptoKeys/k --out ks.json
+circe list-keyset --in ks.json --master-key-uri gcp-kms://projects/p/locations/global/keyRings/r/cryptoKeys/k
+
+# Move a keyset to another KMS key, or out of KMS (omit --new-master-key-uri).
+circe convert-keyset --in ks.json --master-key-uri gcp-kms://... \
+  --new-master-key-uri aws-kms://arn:aws:kms:eu-west-1:111122223333:key/... --out ks-aws.json
+```
+
+| Backend | URI | Credentials without `--credential` |
+|---------|-----|------------------------------------|
+| GCP KMS | `gcp-kms://projects/.../cryptoKeys/...` | Application Default Credentials |
+| AWS KMS | `aws-kms://arn:aws:kms:...` | the AWS SDK default chain |
+| HashiCorp Vault | `hcvault://host:8200/transit/keys/<name>` | `VAULT_TOKEN` (token auth only) |
+
+### Files and errors
+
 Keysets are read from `--in` (default stdin) and written to `--out`
 (default stdout) in Tink's `json` or `binary` format (`--in-format`,
 `--out-format`). `--out` never overwrites an existing file. Errors exit

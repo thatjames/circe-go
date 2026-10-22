@@ -26,8 +26,9 @@ func newKeyIDCommand(use, short string, op func(m *keyset.Manager, id uint32) er
 		Short: short,
 	}
 	cmd.Flags().Uint32Var(&id, "key-id", 0, "ID of the key (see list-keyset)")
-	in := addInFlags(cmd)
-	out := addOutFlags(cmd)
+	k := addKMSFlags(cmd, "")
+	in := addInFlags(cmd, k)
+	out := addOutFlags(cmd, k)
 	cmd.RunE = func(cmd *cobra.Command, _ []string) error {
 		if !cmd.Flags().Changed("key-id") {
 			return usagef("--key-id is required")

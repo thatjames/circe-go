@@ -13,14 +13,16 @@ import (
 	"github.com/thatjames/circe-go/internal/keysetio"
 )
 
-// inFlags are the --in and --in-format flags of a command that reads a keyset.
+// inFlags are the --in and --in-format flags of a command that reads a
+// keyset; kms, when set, decrypts it.
 type inFlags struct {
 	path   string
 	format keysetio.Format
+	kms    *kmsFlags
 }
 
-func addInFlags(cmd *cobra.Command) *inFlags {
-	f := &inFlags{format: keysetio.JSON}
+func addInFlags(cmd *cobra.Command, k *kmsFlags) *inFlags {
+	f := &inFlags{format: keysetio.JSON, kms: k}
 	cmd.Flags().StringVar(&f.path, "in", "", "read the keyset from this file (default: stdin)")
 	cmd.Flags().Var(&f.format, "in-format", "input keyset format: json or binary")
 	return f
@@ -28,25 +30,35 @@ func addInFlags(cmd *cobra.Command) *inFlags {
 
 // read reads the input keyset.
 func (f *inFlags) read(cmd *cobra.Command) (*keyset.Handle, error) {
-	if f.path == "" {
-		return keysetio.Read(cmd.InOrStdin(), "stdin", f.format)
-	}
-	file, err := os.Open(f.path)
+	a, err := f.kms.get(cmd)
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
-	return keysetio.Read(file, f.path, f.format)
+	r, name := cmd.InOrStdin(), "stdin"
+	if f.path != "" {
+		file, err := os.Open(f.path)
+		if err != nil {
+			return nil, err
+		}
+		defer file.Close()
+		r, name = file, f.path
+	}
+	if a != nil {
+		return keysetio.ReadEncrypted(r, name, f.format, a, f.kms.uri)
+	}
+	return keysetio.Read(r, name, f.format)
 }
 
-// outFlags are the --out and --out-format flags of a command that writes a keyset.
+// outFlags are the --out and --out-format flags of a command that writes a
+// keyset; kms, when set, encrypts it.
 type outFlags struct {
 	path   string
 	format keysetio.Format
+	kms    *kmsFlags
 }
 
-func addOutFlags(cmd *cobra.Command) *outFlags {
-	f := &outFlags{format: keysetio.JSON}
+func addOutFlags(cmd *cobra.Command, k *kmsFlags) *outFlags {
+	f := &outFlags{format: keysetio.JSON, kms: k}
 	cmd.Flags().StringVar(&f.path, "out", "", "write the keyset to this new file (default: stdout); never overwrites")
 	cmd.Flags().Var(&f.format, "out-format", "output keyset format: json or binary")
 	return f
@@ -54,8 +66,17 @@ func addOutFlags(cmd *cobra.Command) *outFlags {
 
 // write writes h as the output keyset.
 func (f *outFlags) write(cmd *cobra.Command, h *keyset.Handle) error {
+	a, err := f.kms.get(cmd)
+	if err != nil {
+		return err
+	}
 	var buf bytes.Buffer
-	if err := keysetio.Write(&buf, h, f.format); err != nil {
+	if a != nil {
+		err = keysetio.WriteEncrypted(&buf, h, f.format, a)
+	} else {
+		err = keysetio.Write(&buf, h, f.format)
+	}
+	if err != nil {
 		return err
 	}
 	return f.emit(cmd, buf.Bytes())
