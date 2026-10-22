@@ -1,0 +1,5 @@
+# Files no behavior depends on.
+LICENSE
+go.sum
+.gitignore
+README.md
