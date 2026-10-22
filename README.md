@@ -30,6 +30,15 @@ circe list-key-templates                                  # Tink template names
 circe create-keyset --key-template AES256_GCM --out ks.json
 circe list-keyset --in ks.json                            # key IDs, types, statuses; no key material
 circe convert-keyset --in ks.json --out ks.bin --out-format binary
+
+# Rotate: add a key, then make it the primary.
+circe add-key --key-template AES256_GCM --in ks.json --out ks2.json
+circe promote-key --key-id 1234567 --in ks2.json --out ks3.json
+circe disable-key --key-id 7654321 --in ks3.json --out ks4.json   # also enable-key, delete-key
+
+# The public half of a signature, hybrid or JWT signature keyset.
+circe create-keyset --key-template ED25519 --out priv.json
+circe create-public-keyset --in priv.json --out pub.json
 ```
 
 Keysets are read from `--in` (default stdin) and written to `--out`

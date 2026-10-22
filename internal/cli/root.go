@@ -71,6 +71,12 @@ func newRoot() *cobra.Command {
 	root.SetFlagErrorFunc(func(_ *cobra.Command, err error) error { return usageError{err} })
 	root.AddCommand(
 		newCreateKeyset(),
+		newAddKey(),
+		newPromoteKey(),
+		newEnableKey(),
+		newDisableKey(),
+		newDeleteKey(),
+		newCreatePublicKeyset(),
 		newListKeyset(),
 		newListKeyTemplates(),
 		newConvertKeyset(),
