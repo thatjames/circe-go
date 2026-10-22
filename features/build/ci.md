@@ -2,11 +2,11 @@
 type: Feature
 title: GitHub Actions CI
 description: On every push and pull request, GitHub Actions runs go vet and go test with cgo off on Linux and macOS.
-status: draft
+status: stable
 code:
   - .github/workflows/ci.yml
 tags: [build, ci, github]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T18:32:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T18:55:51Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -20,7 +20,10 @@ on both supported platforms before it lands.
   `CGO_ENABLED=0` and the Go version from `go.mod`:
   `go build ./...`, `go vet ./...`, `go test ./...`.
 - The run fails when any step fails; a `go.mod`/`go.sum` that is not tidy
-  (`go mod tidy` changes it) also fails the run.
+  (`go mod tidy -diff` reports a change) also fails the run.
+- The jobs run on GitHub's `actions/checkout` and `actions/setup-go`,
+  with `go-version-file: go.mod`; one platform failing does not cancel
+  the other (`fail-fast: false`).
 - Tests use synthetic keysets only, created in the test; no KMS or cloud
   credentials are needed or configured in CI.
 

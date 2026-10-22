@@ -1,0 +1,6 @@
+# Build output
+/circe
+/dist/
+
+# Local agent settings
+.claude/settings.local.json

@@ -5,8 +5,9 @@ description: circe-go is the pure-Go module github.com/thatjames/circe-go on Go 
 status: stable
 code:
   - go.mod
+  - doc.go
 tags: [build, go]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T18:32:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T18:55:51Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -20,7 +21,8 @@ One Go module holds the circe CLI and its packages, so it installs with
 - The module builds with `CGO_ENABLED=0`: no package in it, and no
   dependency it pulls in, needs cgo.
 - `go.sum` is committed beside `go.mod` once there are dependencies.
-- Built today: only `go.mod`. No packages, no dependencies yet.
+- The module root is package `circe` (`doc.go`), holding only the module's
+  package comment; the code lives under `cmd/` and `internal/`.
 
 # Interfaces
 - Planned dependencies: `github.com/tink-crypto/tink-go/v2` for all key
@@ -36,3 +38,6 @@ One Go module holds the circe CLI and its packages, so it installs with
 - **Platforms: Linux and macOS** (user, 2026-10-22). Windows is not a
   target.
 - **MIT licence.**
+- **Root package `doc.go`** (2026-10-22): `go vet ./...` and
+  `go test ./...` fail on a module with no packages, so the root carries
+  a doc-only package and [CI](/build/ci.md) is green before any code lands.
