@@ -8,7 +8,7 @@ code:
   - internal/cli/root.go
   - internal/cli/root_test.go
 tags: [cli, cobra]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T18:32:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:10:00Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -22,7 +22,9 @@ formats, not with the Java tinkey CLI's command or flag spelling.
   `go install github.com/thatjames/circe-go/cmd/circe@latest`.
 - `circe` with no subcommand, or `circe help`, prints the command list.
   `circe --version` prints the version ([release builds](/build/release.md)).
-- Subcommands: see [keyset lifecycle](/keyset/lifecycle.md),
+- Subcommands: see [create keyset](/keyset/create-keyset.md),
+  [key management](/keyset/key-management.md),
+  [public keyset](/keyset/public-keyset.md),
   [inspect and convert](/keyset/inspect-convert.md).
 - Commands that read a keyset take `--in <path>` (default: stdin) and
   `--in-format json|binary` (default `json`). Commands that write one take

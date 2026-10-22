@@ -1,10 +1,9 @@
 ---
 type: Feature
-title: Keyset lifecycle
-description: create-keyset, add-key, promote-key, enable-key, disable-key, destroy-key and delete-key manage keys in a Tink keyset.
+title: Key management
+description: add-key, promote-key, enable-key, disable-key, destroy-key and delete-key change the keys of an existing Tink keyset; no rotate-keyset.
 status: draft
 code:
-  - internal/cli/create_keyset*.go
   - internal/cli/add_key*.go
   - internal/cli/promote_key*.go
   - internal/cli/enable_key*.go
@@ -12,19 +11,18 @@ code:
   - internal/cli/destroy_key*.go
   - internal/cli/delete_key*.go
 tags: [keyset, cli]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:00:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:10:00Z }
 verified: { by: human:slimjim, at: 2026-10-22T19:00:00Z }
 ---
 
 # Intent
-The core of tinkey: create a keyset and manage its keys over time, using
-tink-go's `keyset.Manager`.
+Manage a keyset's keys over time with tink-go's `keyset.Manager`, one
+explicit step per command.
 
 # Behavior
-- `create-keyset --key-template <NAME>` writes a new keyset with one
-  enabled primary key from the [template](/keyset/key-templates.md).
 - `add-key --key-template <NAME>` reads a keyset, adds a new enabled,
-  non-primary key and writes the keyset.
+  non-primary key from the [template](/keyset/key-templates.md) and
+  writes the keyset.
 - `promote-key --key-id <ID>` makes an enabled key the primary.
 - `enable-key`, `disable-key`, `destroy-key`, `delete-key --key-id <ID>`
   change one key's status or remove it, with tink-go's rules: the primary
@@ -32,13 +30,13 @@ tink-go's `keyset.Manager`.
   material and keeps the entry.
 - An unknown `--key-id` is an error; the output is not written.
 - Each command reads and writes through [keyset I/O](/keyset/keyset-io.md)
-  with the shared flags of the [command surface](/cli/command-surface.md),
-  so they work on cleartext and encrypted keysets alike.
+  with the shared flags of the [command surface](/cli/command-surface.md).
 - Each command has tests that run it on synthetic keysets and check the
   resulting keyset.
 
 # Interfaces
 - `keyset.Manager` of tink-go v2.
+- Creating the keyset: [create keyset](/keyset/create-keyset.md).
 
 # Decisions
 - **All tinkey commands in scope** (user, 2026-10-22), built

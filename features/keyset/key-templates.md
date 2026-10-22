@@ -6,7 +6,7 @@ status: draft
 code:
   - internal/templates/**
 tags: [keyset, tink, templates]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T18:32:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:10:00Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -30,7 +30,8 @@ has template functions but no lookup by name, so circe keeps the table.
   keyset from.
 
 # Interfaces
-- Used by `create-keyset` and `add-key` ([lifecycle](/keyset/lifecycle.md)).
+- Used by [create-keyset](/keyset/create-keyset.md) and
+  [add-key](/keyset/key-management.md).
 
 # Decisions
 - **Tink key templates** (user, 2026-10-22): names and parameters come
