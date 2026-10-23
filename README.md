@@ -8,6 +8,8 @@ This is **NOT** an official Google tool, it is only based off of Google's APIs. 
 
 Every line of code (for all intents and purposes) was written by claude. I am a senior engineer and I am fully responsible for the code in thie repository. Claude may have typed it, but I made the decisions. 
 
+## What is circe?
+
 `circe` is a command-line tool for [Tink](https://developers.google.com/tink)
 keysets, written in Go on [tink-go](https://github.com/tink-crypto/tink-go).
 It does what Tink's `tinkey` does: create and manage keysets, inspect and
