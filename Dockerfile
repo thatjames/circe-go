@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # See features/build/docker-image.md.
 
-FROM --platform=$BUILDPLATFORM golang:1.26.8 AS build
+FROM --platform=$BUILDPLATFORM golang:1.26.10 AS build
 WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
