@@ -38,7 +38,8 @@ A scope in brackets is optional: chore(deps):, fix(kms):.
 ## Checklist
 
 - [ ] The title starts with the type ticked above.
-- [ ] `go test ./...`, `go vet ./...` and `go mod tidy -diff` pass.
+- [ ] `go test ./...`, `go vet ./...`, `golangci-lint run` and
+      `go mod tidy -diff` pass.
 - [ ] The matching feature in `features/` is updated, or a new one added.
 - [ ] No keysets, key material, credentials or real key URIs anywhere in
       this pull request.

@@ -8,7 +8,7 @@ code:
   - .github/ISSUE_TEMPLATE/**
   - .github/pull_request_template.md
 tags: [project, github, contributing]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T21:36:52Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T23:00:00Z }
 ---
 
 # Intent
@@ -21,7 +21,7 @@ questions, and to build, test and send a change without guessing.
   Google tool; the Tink API is the contract, the Java tinkey CLI is not),
   never posting secrets, security reports, bug reports, feature
   requests, the development loop (`make`, `go test`, `go vet`,
-  `go mod tidy`, `make dev` for AWS KMS on floci), how features in
+  `golangci-lint run`, `go mod tidy`, `make dev` for AWS KMS on floci), how features in
   `features/` describe behaviour, pull requests, AI-assisted
   contributions, and the MIT licence of contributions.
 - Security problems go to GitHub private vulnerability reporting
@@ -47,7 +47,7 @@ questions, and to build, test and send a change without guessing.
   Hotfixes, Emergency patches); `docs:`, `test:`, `chore:` are left out
   ([Release builds](/build/release.md)). The pull request template
   (`.github/pull_request_template.md`) lists the types with a tick box
-  each, and a checklist: title typed, tests, vet and tidy pass, the
+  each, and a checklist: title typed, tests, vet, lint and tidy pass, the
   feature updated, no key material.
 - `CONTRIBUTING.md` has the same type table under Pull requests, and a
   section on Dependabot and govulncheck
@@ -56,7 +56,8 @@ questions, and to build, test and send a change without guessing.
   repository has.
 
 # Interfaces
-- [GitHub Actions CI](/build/ci.md): the checks a pull request must pass.
+- [GitHub Actions CI](/build/ci.md) and [golangci-lint checks](/build/lint.md):
+  the checks a pull request must pass.
 - [Make targets](/build/makefile.md) and the
   [floci dev environment](/build/dev-floci.md): the development loop.
 - [Command surface](/cli/command-surface.md): exit codes and errors a

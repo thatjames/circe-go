@@ -62,7 +62,7 @@ func gcpAEAD(ctx context.Context, uri, credential string) (tink.AEAD, error) {
 		if _, err := os.Stat(credential); err != nil {
 			return nil, fmt.Errorf("credential file: %w", err)
 		}
-		opts = append(opts, gcpkms.WithGoogleAPIClientOptions(option.WithCredentialsFile(credential)))
+		opts = append(opts, gcpkms.WithGoogleAPIClientOptions(option.WithCredentialsFile(credential))) //nolint:staticcheck // SA1019; its replacement changes which credential files load: backlog plan gcp-credential-file-deprecation
 	}
 	c, err := gcpkms.NewClient(ctx, gcpPrefix, opts...)
 	if err != nil {
@@ -142,7 +142,7 @@ func isCSV(path string) bool {
 func awsRegion(uri string) (string, error) {
 	f := strings.Split(strings.TrimPrefix(uri, awsPrefix), ":")
 	if len(f) < 5 || f[0] != "arn" || !strings.HasPrefix(f[1], "aws") || f[2] != "kms" || f[3] == "" {
-		return "", errors.New("no region in key URI: want aws-kms://arn:<partition>:kms:<region>:...")
+		return "", errors.New("no region in key URI: want aws-kms://arn:<partition>:kms:<region>:...") //nolint:revive,staticcheck // the message ends in the URI pattern's "...", not punctuation
 	}
 	return f[3], nil
 }

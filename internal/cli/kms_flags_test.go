@@ -99,10 +99,10 @@ func TestEncryptedThroughEveryCommand(t *testing.T) {
 func TestConvertBetweenKMSKeys(t *testing.T) {
 	f := useFakeKMS(t)
 	h := newKeyset(t, "AES256_GCM")
-	clear := jsonKeyset(t, h)
+	plain := jsonKeyset(t, h)
 
 	// Cleartext to fake://a, a to b, b to cleartext.
-	encA := []byte(mustRun(t, clear, "convert-keyset", "--new-master-key-uri", "fake://a"))
+	encA := []byte(mustRun(t, plain, "convert-keyset", "--new-master-key-uri", "fake://a"))
 	encB := []byte(mustRun(t, encA, "convert-keyset", "--master-key-uri", "fake://a", "--new-master-key-uri", "fake://b",
 		"--credential", "cred-a", "--new-credential", "cred-b"))
 	if f.creds["fake://a"] != "cred-a" || f.creds["fake://b"] != "cred-b" {
@@ -118,7 +118,7 @@ func TestConvertBetweenKMSKeys(t *testing.T) {
 	}
 
 	// Binary encrypted output too.
-	bin := mustRun(t, clear, "convert-keyset", "--new-master-key-uri", "fake://a", "--out-format", "binary")
+	bin := mustRun(t, plain, "convert-keyset", "--new-master-key-uri", "fake://a", "--out-format", "binary")
 	if _, err := keyset.Read(keyset.NewBinaryReader(strings.NewReader(bin)), f.aeads["fake://a"]); err != nil {
 		t.Errorf("binary encrypted keyset: %v", err)
 	}

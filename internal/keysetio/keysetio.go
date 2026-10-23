@@ -15,6 +15,7 @@ import (
 // Format is a keyset serialization: "json" or "binary". It is a pflag.Value.
 type Format string
 
+// The keyset formats Tink reads and writes.
 const (
 	JSON   Format = "json"
 	Binary Format = "binary"
@@ -22,6 +23,7 @@ const (
 
 func (f *Format) String() string { return string(*f) }
 
+// Set parses s as a Format; it is the pflag.Value setter.
 func (f *Format) Set(s string) error {
 	switch Format(s) {
 	case JSON, Binary:
@@ -31,6 +33,7 @@ func (f *Format) Set(s string) error {
 	return fmt.Errorf("format %q: want json or binary", s)
 }
 
+// Type names the accepted values in flag help.
 func (f *Format) Type() string { return "json|binary" }
 
 // Reader returns the tink-go keyset reader for f over r.
