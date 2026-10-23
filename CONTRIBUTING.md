@@ -64,6 +64,7 @@ make                 # build ./circe (static, CGO_ENABLED=0)
 go test ./...
 go vet ./...
 go mod tidy -diff    # must print nothing
+go run golang.org/x/vuln/cmd/govulncheck@latest ./...
 make docker          # build the image circe:<latest tag>
 ```
 
@@ -99,11 +100,41 @@ one. If you're unsure which feature that is, ask in the pull request.
 
 ## Pull requests
 
+Every change is made on a feature branch and lands on `main` as one
+squash-merged commit; nothing is pushed to `main` directly.
+
 - Keep each pull request to one change, with tests.
-- Write the commit subject as a short summary of the change; use the
-  body for the why.
-- Link the issue it closes.
+- The pull request title becomes the commit subject on `main`, and the
+  release notes are built from those subjects. Start it with a type:
+
+  | Type | Use it for | Release notes |
+  |------|------------|---------------|
+  | `feat:` | a new command, flag or behaviour | Features |
+  | `change:` | a change to existing behaviour | Changes |
+  | `fix:` | a bug fix | Fixes |
+  | `hotfix:` | an urgent fix to the latest release | Hotfixes |
+  | `emergency:` | an emergency patch (security, broken release) | Emergency patches |
+  | `docs:` | documentation only | left out |
+  | `test:` | tests only | left out |
+  | `chore:` | build, CI, dependencies, tidying | left out |
+
+  A scope is optional: `fix(kms): ...`, `chore(deps): ...`. The pull
+  request template lists the types.
+- Use the description for the why, and link the issue it closes.
 - Releases are tagged by the maintainer; don't change version numbers.
+
+## Dependencies and vulnerabilities
+
+Dependabot opens weekly pull requests for Go modules (`fix(deps):`, in
+the release notes), GitHub Actions and the Docker base images
+(`chore(deps):`, left out). `govulncheck` runs on every push and pull
+request and every Monday, so a newly published vulnerability in a
+dependency fails the Vulnerabilities check on `main`. Run it locally
+with:
+
+```sh
+go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+```
 
 ## AI-assisted contributions
 

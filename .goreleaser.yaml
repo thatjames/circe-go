@@ -32,9 +32,25 @@ changelog:
   sort: asc
   filters:
     exclude:
-      - "^docs:"
-      - "^test:"
-      - "^chore:"
+      - '^(docs|test|chore)(\(.+\))?!?:'
+  groups:
+    - title: Emergency patches
+      regexp: '^emergency(\(.+\))?!?:'
+      order: 0
+    - title: Hotfixes
+      regexp: '^hotfix(\(.+\))?!?:'
+      order: 1
+    - title: Features
+      regexp: '^feat(\(.+\))?!?:'
+      order: 2
+    - title: Changes
+      regexp: '^change(\(.+\))?!?:'
+      order: 3
+    - title: Fixes
+      regexp: '^fix(\(.+\))?!?:'
+      order: 4
+    - title: Other
+      order: 999
 
 release:
   github:

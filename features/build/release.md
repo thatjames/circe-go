@@ -7,7 +7,7 @@ code:
   - .goreleaser.yaml
   - .github/workflows/release.yml
 tags: [build, release, github]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T21:00:22Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T21:36:52Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -24,7 +24,14 @@ Users who do not have Go get a ready binary; versions are tagged so
 - Archives are `circe_<version>_<os>_<arch>.tar.gz` (version without
   the `v`), each holding `circe`, `LICENSE` and `README.md`; the
   checksums file is `checksums.txt` (SHA-256). The release notes are the
-  commit subjects since the previous tag.
+  commit subjects since the previous tag (on `main`, one squash-merged
+  pull request each), grouped by their type prefix in this order:
+  Emergency patches (`emergency:`), Hotfixes (`hotfix:`), Features
+  (`feat:`), Changes (`change:`), Fixes (`fix:`), then Other for any
+  subject without one of those types. A type may carry a scope and a
+  `!` (`fix(kms)!:`).
+- Subjects starting with `docs:`, `test:` or `chore:` (with or without a
+  scope, so `chore(deps):` too) are left out of the release notes.
 - Builds are `-trimpath`, stripped (`-s -w`), with file times set to
   the commit time, so the same tag builds the same binaries.
 - `circe --version` prints the tag the binary was built from (set by
@@ -48,6 +55,9 @@ Users who do not have Go get a ready binary; versions are tagged so
 
 # Decisions
 - **Release builds wanted** (user, 2026-10-22).
+- **Release notes grouped by PR type; docs, test and chore left out**
+  (user, 2026-10-23). goreleaser matches the commit subject alone,
+  without the SHA, so the regexps are anchored at the type.
 - **goreleaser, four targets** (user, 2026-10-22): linux and darwin,
   amd64 and arm64.
 - **Image on ghcr, only for a tag** (user, 2026-10-23). The package is
