@@ -8,7 +8,7 @@ code:
   - internal/keysetio/encrypted*.go
   - internal/cli/kms_flags*.go
 tags: [kms, gcp, aws, vault]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:45:23Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T17:17:54Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -25,8 +25,17 @@ Tink recommends, on the three backends the user works with.
 - `--credential <path>` gives the backend's credentials file. Without
   it, each backend uses its default credential chain:
   - GCP: Application Default Credentials (`GOOGLE_APPLICATION_CREDENTIALS`);
-  - AWS: the SDK default chain (`AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY`,
-    `AWS_PROFILE`, shared config);
+  - AWS: the aws-sdk-go-v2 default chain: `AWS_ACCESS_KEY_ID`/
+    `AWS_SECRET_ACCESS_KEY`, then the profile named by `AWS_PROFILE`
+    (else `default`) from `~/.aws/config` and `~/.aws/credentials`,
+    including SSO, assume-role and `credential_process` profiles, then
+    container and instance roles. The region always comes from the key
+    URI. With `--credential`, a CSV file (as the IAM console downloads
+    it) gives static keys; any other file is read as a shared
+    credentials/config INI file with the profile named by `AWS_PROFILE`,
+    else `default`. A profile missing from the file is an error naming
+    the profile and the file. `--new-credential` follows the same rules;
+    one `AWS_PROFILE` serves both sides;
   - Vault: token auth only. `--credential` is a file holding the token
     (surrounding whitespace ignored), else `VAULT_TOKEN`; no token is an
     error. The server is the URI's host over HTTPS
@@ -81,3 +90,8 @@ Tink recommends, on the three backends the user works with.
   move a keyset between backends.
 - Encrypted I/O and encrypted conversion belong to this feature, so the
   KMS plan builds it whole (user, 2026-10-22).
+- **AWS honours `AWS_PROFILE`** (user, 2026-10-23), with and without
+  `--credential`. The backend moves to `tink-go-awskms/v3`
+  (aws-sdk-go-v2) for it: v2's aws-sdk-go v1 session reads neither
+  `~/.aws/config` nor a profile other than `default` from a credential
+  file (proposed in the AWS_PROFILE plan, 2026-10-23).
