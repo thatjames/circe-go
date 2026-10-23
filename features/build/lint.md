@@ -2,12 +2,12 @@
 type: Feature
 title: golangci-lint checks
 description: A Lint workflow runs golangci-lint v2 with a curated .golangci.yml on every push and pull request and fails on any finding; its badge replaces the retired Go Report Card badge on the README.
-status: draft
+status: stable
 code:
   - .golangci.yml
   - .github/workflows/lint.yml
 tags: [build, ci, github, lint]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T22:24:19Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T23:00:00Z }
 ---
 
 # Intent
@@ -29,8 +29,16 @@ blocks the change instead of only lowering a grade.
   `goimports`.
 - Any linter finding or unformatted file fails the run; there is no
   baseline of tolerated findings (`new-from-rev` is not set).
-- Test files are linted too; exclusions are per linter and rule in
-  `.golangci.yml`, each with a comment saying why.
+- Test files are linted too. Every exclusion carries its reason: a
+  rule that is wrong for the whole repository is excluded in
+  `.golangci.yml` with a comment; a rule wrong for one line gets
+  `//nolint:<linter> // <reason>` on that line.
+- Excluded in `.golangci.yml`: the `std-error-handling` preset
+  (unchecked `Close`, `Flush` and print errors); gosec G304 (reading
+  user-named files is a CLI's job); gosec G104 (errcheck covers it);
+  gosec G101 in `_test.go` files (synthetic secrets only).
+- A finding whose fix would change behaviour is not fixed in a lint
+  change: it gets a `//nolint` naming the backlog plan that fixes it.
 - The workflow has `contents: read` only and needs no secret.
 - The README shows the Lint workflow's status badge for `main` where the
   Go Report Card badge was; the Go Report Card badge is gone.
@@ -53,3 +61,10 @@ blocks the change instead of only lowering a grade.
 - **A curated `.golangci.yml`** (user, 2026-10-24): the defaults plus
   formatters and a few extra linters, roughly what Go Report Card
   checked.
+- **Pinned golangci-lint, bumped by hand** (user, 2026-10-24): a new
+  release with new checks cannot break CI unannounced. The release
+  binary must be built with a Go of at least the minor version in
+  `go.mod`'s `go` line (v2.15.0 is built with go1.27.0, which lints
+  `go 1.27.3`), or it refuses to run; check that when raising either.
+- **No `make lint` target** (user, 2026-10-24): CI and contributors run
+  `golangci-lint run` directly.

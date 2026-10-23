@@ -3,7 +3,7 @@
 [![CI](https://github.com/thatjames/circe-go/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/thatjames/circe-go/actions/workflows/ci.yml)
 [![Vulnerabilities](https://github.com/thatjames/circe-go/actions/workflows/vuln.yml/badge.svg?branch=main)](https://github.com/thatjames/circe-go/actions/workflows/vuln.yml)
 [![Go Reference](https://pkg.go.dev/badge/github.com/thatjames/circe-go.svg)](https://pkg.go.dev/github.com/thatjames/circe-go)
-[![Go Report Card](https://goreportcard.com/badge/github.com/thatjames/circe-go)](https://goreportcard.com/report/github.com/thatjames/circe-go)
+[![Lint](https://github.com/thatjames/circe-go/actions/workflows/lint.yml/badge.svg?branch=main)](https://github.com/thatjames/circe-go/actions/workflows/lint.yml)
 [![Release](https://img.shields.io/github/v/release/thatjames/circe-go)](https://github.com/thatjames/circe-go/releases/latest)
 [![Go version](https://img.shields.io/github/go-mod/go-version/thatjames/circe-go)](go.mod)
 [![License: MIT](https://img.shields.io/github/license/thatjames/circe-go)](LICENSE)

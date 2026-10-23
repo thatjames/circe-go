@@ -63,13 +63,18 @@ environment.
 make                 # build ./circe (static, CGO_ENABLED=0)
 go test ./...
 go vet ./...
+golangci-lint run    # lint and format, config in .golangci.yml
 go mod tidy -diff    # must print nothing
 go run golang.org/x/vuln/cmd/govulncheck@latest ./...
 make docker          # build the image circe:<latest tag>
 ```
 
 CI runs the same checks on Linux and macOS for every push and pull
-request; all of them must pass.
+request (golangci-lint on Linux only); all of them must pass. Install
+the golangci-lint version pinned in `.github/workflows/lint.yml`
+(<https://golangci-lint.run/docs/welcome/install/>). Fix a finding
+rather than silence it; when a rule is wrong for one line, add
+`//nolint:<linter> // <reason>` there.
 
 Tests must not need a cloud account or credentials. Use synthetic
 keysets created in the test and fake AEADs for KMS.

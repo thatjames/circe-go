@@ -1,0 +1,33 @@
+# golangci-lint v2 configuration. See features/build/lint.md.
+version: "2"
+
+linters:
+  # standard: errcheck, govet, ineffassign, staticcheck, unused.
+  default: standard
+  enable:
+    - gosec
+    - misspell
+    - revive
+  exclusions:
+    presets:
+      # Unchecked Close, Flush and print errors: a failed Close of a file
+      # opened for reading, or a failed write of an error to stderr, has
+      # nothing left to report to.
+      - std-error-handling
+    rules:
+      # G304: circe is a CLI; reading the keyset and credential files the
+      # user names on the command line is its job.
+      - linters: [gosec]
+        text: "G304:"
+      # G104: errcheck checks unhandled errors, with the preset above.
+      - linters: [gosec]
+        text: "G104:"
+      # G101: tests use synthetic secrets only, never real credentials.
+      - path: _test\.go
+        linters: [gosec]
+        text: "G101:"
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
