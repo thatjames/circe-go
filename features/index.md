@@ -10,6 +10,7 @@ okf_version: "0.2"
 * [Make targets](/build/makefile.md) - A Makefile builds the circe binary (default), the Docker image tagged with the latest git tag (docker, docker-push) and starts the floci dev container (dev); CI calls it.
 * [Docker image](/build/docker-image.md) - A multi-stage Dockerfile builds a static circe binary for linux/amd64 and linux/arm64 and ships it alone on distroless static (non-root, CA certificates), entrypoint circe.
 * [floci dev environment](/build/dev-floci.md) - compose.yaml runs floci, a local AWS emulator on localhost:4566, so AWS KMS keysets can be tried without an AWS account; make dev starts it.
+* [Dependency updates and vulnerability checks](/build/dependencies.md) - Dependabot opens weekly grouped update pull requests for Go modules, GitHub Actions and Docker base images; govulncheck fails a Vulnerabilities workflow when circe calls a known-vulnerable symbol.
 
 # CLI
 
@@ -30,4 +31,4 @@ okf_version: "0.2"
 
 # Project
 
-* [Contributing guide and issue forms](/project/contributing.md) - CONTRIBUTING.md tells contributors how to report, propose and build changes; GitHub issue forms collect bug reports and feature requests with the details triage needs and no key material.
+* [Contributing guide, issue forms and pull request template](/project/contributing.md) - CONTRIBUTING.md tells contributors how to report, propose and build changes; issue forms collect complete bug reports and feature requests; changes land as squash-merged feature branches whose typed PR title drives the release notes.

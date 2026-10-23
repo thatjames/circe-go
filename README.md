@@ -1,12 +1,20 @@
 # circe
 
+[![CI](https://github.com/thatjames/circe-go/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/thatjames/circe-go/actions/workflows/ci.yml)
+[![Vulnerabilities](https://github.com/thatjames/circe-go/actions/workflows/vuln.yml/badge.svg?branch=main)](https://github.com/thatjames/circe-go/actions/workflows/vuln.yml)
+[![Go Reference](https://pkg.go.dev/badge/github.com/thatjames/circe-go.svg)](https://pkg.go.dev/github.com/thatjames/circe-go)
+[![Go Report Card](https://goreportcard.com/badge/github.com/thatjames/circe-go)](https://goreportcard.com/report/github.com/thatjames/circe-go)
+[![Release](https://img.shields.io/github/v/release/thatjames/circe-go)](https://github.com/thatjames/circe-go/releases/latest)
+[![Go version](https://img.shields.io/github/go-mod/go-version/thatjames/circe-go)](go.mod)
+[![License: MIT](https://img.shields.io/github/license/thatjames/circe-go)](LICENSE)
+
 ## Important Notice
 
 This is **NOT** an official Google tool, it is only based off of Google's APIs. I am just some dude, use your common sense when using random internet software.
 
 ## AI Disclosure
 
-Every line of code (for all intents and purposes) was written by claude. I am a senior engineer and I am fully responsible for the code in thie repository. Claude may have typed it, but I made the decisions. 
+Every line of code (for all intents and purposes) was written by claude. I am a senior engineer and I am fully responsible for the code in this repository. Claude may have typed it, but I made the decisions. 
 
 ## What is circe?
 

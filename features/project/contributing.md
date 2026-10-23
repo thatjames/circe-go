@@ -1,13 +1,14 @@
 ---
 type: Feature
-title: Contributing guide and issue forms
-description: CONTRIBUTING.md tells contributors how to report, propose and build changes; GitHub issue forms collect bug reports and feature requests with the details triage needs and no key material.
+title: Contributing guide, issue forms and pull request template
+description: CONTRIBUTING.md tells contributors how to report, propose and build changes; issue forms collect complete bug reports and feature requests; changes land as squash-merged feature branches whose typed PR title drives the release notes.
 status: stable
 code:
   - CONTRIBUTING.md
   - .github/ISSUE_TEMPLATE/**
+  - .github/pull_request_template.md
 tags: [project, github, contributing]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T21:15:24Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T21:36:52Z }
 ---
 
 # Intent
@@ -37,6 +38,20 @@ questions, and to build, test and send a change without guessing.
     whether the reporter would send a pull request.
 - `config.yml` turns blank issues off and adds two contact links: the
   private security report, and the README for usage questions.
+- Every change is made on a feature branch and lands on `main` as one
+  squash-merged commit whose subject is the pull request title; nothing
+  is pushed to `main` directly.
+- The pull request title starts with a type, with an optional scope in
+  brackets (`fix(kms):`): `feat:`, `change:`, `fix:`, `hotfix:`,
+  `emergency:` appear in the release notes (Features, Changes, Fixes,
+  Hotfixes, Emergency patches); `docs:`, `test:`, `chore:` are left out
+  ([Release builds](/build/release.md)). The pull request template
+  (`.github/pull_request_template.md`) lists the types with a tick box
+  each, and a checklist: title typed, tests, vet and tidy pass, the
+  feature updated, no key material.
+- `CONTRIBUTING.md` has the same type table under Pull requests, and a
+  section on Dependabot and govulncheck
+  ([Dependency updates](/build/dependencies.md)).
 - Labels used are GitHub's defaults (`bug`, `enhancement`), which the
   repository has.
 
@@ -56,5 +71,11 @@ questions, and to build, test and send a change without guessing.
 - **A required no-secrets tick**: a keyset pasted into a public issue
   leaks its key; `list-keyset` output has no key material, so the forms
   ask for that instead.
+- **Feature branches, squash merged into `main`** (user, 2026-10-23):
+  one commit per change on `main`, so the commit subjects are the
+  release notes.
+- **Types `change`, `hotfix` and `emergency`** (user, 2026-10-23) beside
+  `feat`, `fix` and the excluded `docs`, `test`, `chore`. `emergency:` is
+  the prefix for an emergency patch.
 - **AI-assisted contributions follow the README's stance**: welcome,
   with the contributor responsible for every line.
