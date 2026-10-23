@@ -30,6 +30,11 @@ checksum:
 changelog:
   use: git
   sort: asc
+  filters:
+    exclude:
+      - "^docs:"
+      - "^test:"
+      - "^chore:"
 
 release:
   github:
