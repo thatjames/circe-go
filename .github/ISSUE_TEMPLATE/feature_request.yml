@@ -1,0 +1,54 @@
+name: Feature request
+description: Suggest a new command, flag, backend or improvement.
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea. circe follows the Tink API and keyset formats;
+        its commands may differ from the Java `tinkey` CLI. Start with the
+        problem you want solved: the solution can be worked out together.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case
+      description: What are you trying to do, and what stops you today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How you'd like it to work, for example the command and flags.
+      render: shell
+      placeholder: circe <command> --new-flag value --in ks.json --out ks2.json
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Keyset commands (create, add, promote, list, convert, ...)
+        - KMS backends and encrypted keysets
+        - Key templates
+        - Input, output and formats
+        - Install, packaging and Docker image
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: prior-art
+    attributes:
+      label: Does Tink or tinkey do this?
+      description: Link the Tink API, tinkey command or documentation, if there is one.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Workarounds you use now, or other ways it could be solved.
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contributing
+      options:
+        - label: I'd like to send a pull request for this.

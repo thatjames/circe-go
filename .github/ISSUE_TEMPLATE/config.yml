@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/thatjames/circe-go/security/advisories/new
+    about: Please report security problems privately, not in a public issue.
+  - name: Usage and examples
+    url: https://github.com/thatjames/circe-go#usage
+    about: How to use circe's commands, flags and KMS backends.

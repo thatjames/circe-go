@@ -27,3 +27,7 @@ okf_version: "0.2"
 # KMS
 
 * [KMS-encrypted keysets](/kms/encrypted-keysets.md) - --master-key-uri reads and writes KMS-encrypted keysets on every command (GCP KMS, AWS KMS, Vault), and convert-keyset moves keysets between cleartext and KMS keys.
+
+# Project
+
+* [Contributing guide and issue forms](/project/contributing.md) - CONTRIBUTING.md tells contributors how to report, propose and build changes; GitHub issue forms collect bug reports and feature requests with the details triage needs and no key material.

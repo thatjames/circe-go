@@ -1,0 +1,101 @@
+name: Bug report
+description: circe does something wrong, crashes, or writes a keyset Tink can't read.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. **Issues are public: never paste a keyset, key
+        material, credentials or real KMS key URIs.** Use `circe list-keyset`
+        output (it has no key material) and placeholder URIs instead.
+        Security problems go to [a private report](https://github.com/thatjames/circe-go/security/advisories/new).
+  - type: input
+    id: version
+    attributes:
+      label: circe version
+      description: The output of `circe --version`.
+      placeholder: circe v1.0.0
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install circe?
+      options:
+        - go install
+        - Release binary from GitHub
+        - Docker image (ghcr.io/thatjames/circe)
+        - Built from source (make)
+        - Other (say below)
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: OS and architecture
+      options:
+        - Linux amd64
+        - Linux arm64
+        - macOS amd64 (Intel)
+        - macOS arm64 (Apple silicon)
+        - Other (say below)
+    validations:
+      required: true
+  - type: dropdown
+    id: backend
+    attributes:
+      label: KMS backend
+      description: The backend of `--master-key-uri`, if you used one.
+      options:
+        - None (cleartext keyset)
+        - GCP KMS (gcp-kms://)
+        - AWS KMS (aws-kms://)
+        - HashiCorp Vault (hcvault://)
+        - floci or another emulator
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command
+      description: The exact command you ran, with secrets and real URIs replaced.
+      render: shell
+      placeholder: circe convert-keyset --in ks.json --out ks.bin --out-format binary
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened
+      description: The error on stderr and the exit code (`echo $?`), or what was wrong with the output.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: The smallest steps that show the bug, ideally starting from `circe create-keyset`.
+      placeholder: |
+        1. circe create-keyset --key-template AES256_GCM --out ks.json
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else
+      description: Key template, keyset format (json or binary), which Tink library reads the keyset, environment variables that matter (names only, never values).
+  - type: checkboxes
+    id: no-secrets
+    attributes:
+      label: No secrets
+      options:
+        - label: This report contains no keyset, key material, credentials or real KMS key URIs.
+          required: true
