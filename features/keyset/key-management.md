@@ -1,7 +1,7 @@
 ---
 type: Feature
 title: Key management
-description: add-key, promote-key, enable-key, disable-key and delete-key change the keys of an existing Tink keyset; destroy-key waits on a decision; no rotate-keyset.
+description: add-key, promote-key, enable-key, disable-key and delete-key change the keys of an existing Tink keyset; no destroy-key and no rotate-keyset.
 status: stable
 code:
   - internal/cli/add_key*.go
@@ -11,8 +11,8 @@ code:
   - internal/cli/delete_key*.go
   - internal/cli/key_commands*.go
 tags: [keyset, cli]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:10:39Z }
-verified: { by: human:slimjim, at: 2026-10-22T19:00:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T07:34:56Z }
+verified: { by: human:slimjim, at: 2026-10-23T07:34:56Z }
 ---
 
 # Intent
@@ -29,7 +29,7 @@ explicit step per command.
   key's status or remove it, with tink-go's rules: the primary cannot be
   disabled or deleted. Enabling an enabled key, or disabling a disabled
   one, is not an error.
-- `destroy-key` is not offered yet: see Decisions.
+- There is no `destroy-key`: see Decisions.
 - A missing `--key-id` is a usage error. An unknown one is an error
   (`no key with ID <ID> in the keyset`); the output is not written.
 - Errors from tink-go are shown without its `keyset.Manager: ` prefix.
@@ -49,10 +49,10 @@ explicit step per command.
 - **No `rotate-keyset`** (user, 2026-10-22): rotating is `add-key` then
   `promote-key`, explicitly. A combined command blurs which key is
   primary and can confuse users; anyone who wants it can alias the two.
-- **`destroy-key` waits on the user** (2026-10-22): Tink destroys a key
-  by setting `DESTROYED` and removing its key data, but tink-go v2.9.0
+- **No `destroy-key`** (user, 2026-10-23): Tink destroys a key by
+  setting `DESTROYED` and removing its key data, but tink-go v2.9.0
   rejects such a keyset on read (`key <ID> has no key data`) and its
   `keyset.Manager` has no destroy. A circe-destroyed keyset would be
   readable by Java, C++ and Python Tink, but not by tink-go or circe
-  itself. Until the user decides, `destroy-key` is left out; `delete-key`
-  removes a key entirely.
+  itself. `delete-key` removes a key entirely instead. Revisit when
+  tink-go reads destroyed keys.
