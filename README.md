@@ -69,8 +69,24 @@ circe convert-keyset --in ks.json --master-key-uri gcp-kms://... \
 | Backend | URI | Credentials without `--credential` |
 |---------|-----|------------------------------------|
 | GCP KMS | `gcp-kms://projects/.../cryptoKeys/...` | Application Default Credentials |
-| AWS KMS | `aws-kms://arn:aws:kms:...` | the AWS SDK default chain |
+| AWS KMS | `aws-kms://arn:aws:kms:...` | the AWS SDK default chain, with the profile `AWS_PROFILE` names |
 | HashiCorp Vault | `hcvault://host:8200/transit/keys/<name>` | `VAULT_TOKEN` (token auth only) |
+
+AWS uses the profile named by `AWS_PROFILE` (else `default`) from
+`~/.aws/config` and `~/.aws/credentials`, SSO and assume-role profiles
+included, as the AWS CLI does. The region comes from the key URI.
+`--credential` takes either a CSV file of access keys as the IAM console
+downloads it, or a shared credentials/config file. From a shared file
+circe uses the `AWS_PROFILE` profile (else `default`), and a profile
+missing from that file is an error:
+
+```sh
+AWS_PROFILE=prod circe list-keyset --in ks.json --master-key-uri aws-kms://arn:aws:kms:eu-west-1:111122223333:key/...
+```
+
+`convert-keyset` reads both `--credential` and `--new-credential` with
+the same `AWS_PROFILE`. To move a keyset between two AWS profiles, pass
+each side its own file.
 
 ### Files and errors
 

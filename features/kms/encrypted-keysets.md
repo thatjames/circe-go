@@ -8,7 +8,7 @@ code:
   - internal/keysetio/encrypted*.go
   - internal/cli/kms_flags*.go
 tags: [kms, gcp, aws, vault]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T17:17:54Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T18:05:00Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -19,7 +19,7 @@ Tink recommends, on the three backends the user works with.
 # Behavior
 - `--master-key-uri` selects the backend by prefix:
   - `gcp-kms://...` via `tink-go-gcpkms/v2`;
-  - `aws-kms://...` via `tink-go-awskms/v2`;
+  - `aws-kms://...` via `tink-go-awskms/v3` (aws-sdk-go-v2);
   - `hcvault://...` via `tink-go-hcvault/v2`.
   Any other prefix is an error listing the supported ones.
 - `--credential <path>` gives the backend's credentials file. Without
@@ -32,8 +32,9 @@ Tink recommends, on the three backends the user works with.
     container and instance roles. The region always comes from the key
     URI. With `--credential`, a CSV file (as the IAM console downloads
     it) gives static keys; any other file is read as a shared
-    credentials/config INI file with the profile named by `AWS_PROFILE`,
-    else `default`. A profile missing from the file is an error naming
+    credentials/config INI file (`[name]` or `[profile name]` sections)
+    with the profile named by `AWS_PROFILE`, else `default`; that profile
+    wins over `AWS_ACCESS_KEY_ID`, and `~/.aws` is not read. A profile missing from the file is an error naming
     the profile and the file. `--new-credential` follows the same rules;
     one `AWS_PROFILE` serves both sides;
   - Vault: token auth only. `--credential` is a file holding the token
@@ -91,7 +92,11 @@ Tink recommends, on the three backends the user works with.
 - Encrypted I/O and encrypted conversion belong to this feature, so the
   KMS plan builds it whole (user, 2026-10-22).
 - **AWS honours `AWS_PROFILE`** (user, 2026-10-23), with and without
-  `--credential`. The backend moves to `tink-go-awskms/v3`
-  (aws-sdk-go-v2) for it: v2's aws-sdk-go v1 session reads neither
-  `~/.aws/config` nor a profile other than `default` from a credential
-  file (proposed in the AWS_PROFILE plan, 2026-10-23).
+  `--credential`, and only through the environment: no `--aws-profile`
+  flag. The backend moved to `tink-go-awskms/v3` (aws-sdk-go-v2) for it:
+  v2's aws-sdk-go v1 session read neither `~/.aws/config` nor a profile
+  other than `default` from a credential file. Tink v3 still hard-codes
+  `default` for an INI file, so circe loads INI files and the default
+  chain itself and hands Tink the KMS client (`WithKMS`); CSV files keep
+  Tink's handling. v2 and v3 both use the `associatedData` encryption
+  context, so existing keysets still decrypt.
