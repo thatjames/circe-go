@@ -4,7 +4,7 @@ okf_version: "0.2"
 
 # Build
 
-* [Go module and toolchain](/build/go-module.md) - circe-go is the pure-Go module github.com/thatjames/circe-go on Go 1.26, depending on tink-go and cobra only through go.mod.
+* [Go module and toolchain](/build/go-module.md) - circe-go is the pure-Go module github.com/thatjames/circe-go on Go 1.27, depending on tink-go and cobra only through go.mod.
 * [GitHub Actions CI](/build/ci.md) - On every push and pull request, GitHub Actions runs go vet, go test and make with cgo off on Linux and macOS.
 * [Release builds](/build/release.md) - Pushing a vX.Y.Z tag builds static circe binaries for Linux and macOS, publishes them as a GitHub release, and pushes the Docker image to ghcr.io/thatjames/circe.
 * [Make targets](/build/makefile.md) - A Makefile builds the circe binary (default), the Docker image tagged with the latest git tag (docker, docker-push) and starts the floci dev container (dev); CI calls it.

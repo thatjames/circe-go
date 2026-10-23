@@ -56,7 +56,7 @@ request before writing code, so we can agree on the shape first.
 
 ## Development
 
-You need Go 1.26 or later, `make`, and Docker for the image and the dev
+You need Go 1.27 or later, `make`, and Docker for the image and the dev
 environment.
 
 ```sh

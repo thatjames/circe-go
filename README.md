@@ -38,7 +38,7 @@ differ, they keep tinkey's names.
 go install github.com/thatjames/circe-go/cmd/circe@latest
 ```
 
-circe is pure Go (built with `CGO_ENABLED=0`) and needs Go 1.26 or later.
+circe is pure Go (built with `CGO_ENABLED=0`) and needs Go 1.27 or later.
 It supports Linux and macOS.
 
 ## Usage
