@@ -15,13 +15,15 @@ jobs:
       CGO_ENABLED: "0"
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
       - name: Tidy
         run: go mod tidy -diff
       - name: Build
-        run: go build ./...
+        run: go build ./... && make
       - name: Vet
         run: go vet ./...
       - name: Test

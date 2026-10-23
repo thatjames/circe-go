@@ -5,8 +5,11 @@ okf_version: "0.2"
 # Build
 
 * [Go module and toolchain](/build/go-module.md) - circe-go is the pure-Go module github.com/thatjames/circe-go on Go 1.26, depending on tink-go and cobra only through go.mod.
-* [GitHub Actions CI](/build/ci.md) - On every push and pull request, GitHub Actions runs go vet and go test with cgo off on Linux and macOS.
-* [Release builds](/build/release.md) - Pushing a vX.Y.Z tag builds static circe binaries for Linux and macOS and publishes them as a GitHub release.
+* [GitHub Actions CI](/build/ci.md) - On every push and pull request, GitHub Actions runs go vet, go test and make with cgo off on Linux and macOS.
+* [Release builds](/build/release.md) - Pushing a vX.Y.Z tag builds static circe binaries for Linux and macOS, publishes them as a GitHub release, and pushes the Docker image to ghcr.io/thatjames/circe.
+* [Make targets](/build/makefile.md) - A Makefile builds the circe binary (default), the Docker image tagged with the latest git tag (docker, docker-push) and starts the floci dev container (dev); CI calls it.
+* [Docker image](/build/docker-image.md) - A multi-stage Dockerfile builds a static circe binary for linux/amd64 and linux/arm64 and ships it alone on distroless static (non-root, CA certificates), entrypoint circe.
+* [floci dev environment](/build/dev-floci.md) - compose.yaml runs floci, a local AWS emulator on localhost:4566, so AWS KMS keysets can be tried without an AWS account; make dev starts it.
 
 # CLI
 

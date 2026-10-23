@@ -1,13 +1,13 @@
 ---
 type: Feature
 title: Release builds
-description: Pushing a vX.Y.Z tag builds static circe binaries for Linux and macOS and publishes them as a GitHub release.
+description: Pushing a vX.Y.Z tag builds static circe binaries for Linux and macOS, publishes them as a GitHub release, and pushes the Docker image to ghcr.io/thatjames/circe.
 status: stable
 code:
   - .goreleaser.yaml
   - .github/workflows/release.yml
 tags: [build, release, github]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:54:41Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T21:00:22Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -32,6 +32,12 @@ Users who do not have Go get a ready binary; versions are tagged so
   a `go install` build prints the module version from build info.
 - The workflow runs goreleaser v2 with the repository's `GITHUB_TOKEN`
   (`contents: write`); it needs no other secret.
+- A second job, `image`, logs in to `ghcr.io` with `GITHUB_TOKEN`
+  (`packages: write`), sets up buildx and runs
+  `make docker-push IMAGE=ghcr.io/thatjames/circe`: the
+  [Docker image](/build/docker-image.md) for linux/amd64 and
+  linux/arm64, tagged `<tag>` and `latest`. The two jobs run in
+  parallel; one failing does not undo the other.
 - `goreleaser check` validates the config; `goreleaser release --snapshot
   --clean` builds the four archives locally into `dist/` (git-ignored)
   without publishing.
@@ -44,3 +50,8 @@ Users who do not have Go get a ready binary; versions are tagged so
 - **Release builds wanted** (user, 2026-10-22).
 - **goreleaser, four targets** (user, 2026-10-22): linux and darwin,
   amd64 and arm64.
+- **Image on ghcr, only for a tag** (user, 2026-10-23). The package is
+  named `circe` after the binary; the image's
+  `org.opencontainers.image.source` label links it to the repository.
+  ghcr creates a new package private; making it public is a one-time
+  step in the GitHub package settings.

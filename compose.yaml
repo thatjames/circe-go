@@ -1,0 +1,16 @@
+# Local AWS emulator for trying aws-kms:// keysets. See features/build/dev-floci.md.
+name: circe
+
+services:
+  floci:
+    image: floci/floci:2.3.0
+    container_name: circe-floci
+    environment:
+      FLOCI_STORAGE_MODE: persistent
+    ports:
+      - "127.0.0.1:4566:4566"
+    volumes:
+      - floci-data:/app/data
+
+volumes:
+  floci-data:
