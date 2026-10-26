@@ -8,7 +8,7 @@ code:
   - internal/keysetio/encrypted*.go
   - internal/cli/kms_flags*.go
 tags: [kms, gcp, aws, vault]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T18:05:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-10-26T09:07:48Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -66,6 +66,12 @@ Tink recommends, on the three backends the user works with.
   key URI; nothing is written.
 - KMS errors (permission, unknown key, network) are reported with the
   backend and key URI, never with credential values.
+- No backend SDK logs. `GOOGLE_SDK_GO_LOGGING_LEVEL` (any level) prints
+  nothing: the GCP client gets a logger that discards everything, so
+  tokens, the service-account assertion and the keyset plaintext of
+  KMS Encrypt/Decrypt never reach stderr. AWS logs only with a
+  `ClientLogMode` set in code, Vault only with a `Logger` set in code;
+  circe sets neither.
 - Tests use fake AEADs in place of the KMS; CI needs no cloud access.
   The backend dispatch is tested offline: clients are built, never used.
 
@@ -84,6 +90,13 @@ Tink recommends, on the three backends the user works with.
 - **Backends: GCP KMS, AWS KMS, HashiCorp Vault** (user, 2026-10-22).
 - Credentials are never logged or printed; only key names of
   environment variables appear in docs and errors.
+- **GCP SDK logging is discarded, not redacted** (user, 2026-10-26).
+  With `GOOGLE_SDK_GO_LOGGING_LEVEL=debug` the Google Cloud Go SDK
+  logged unredacted token requests and responses and every KMS request
+  and response, the keyset plaintext included (v1.0.0, v1.0.1). A
+  discard logger (`option.WithLogger`) silences every SDK log line,
+  present and future; a redacting logger would have to keep up with
+  the SDK, and unsetting the variable would hide the intent.
 - **Vault: token only in v1** (user, 2026-10-22). AppRole or Kubernetes
   auth is later work.
 - **One credential per side** (user, 2026-10-22): `--credential` for the

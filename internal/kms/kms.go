@@ -7,6 +7,7 @@ import (
 	"encoding/csv"
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/url"
 	"os"
 	"strings"
@@ -57,18 +58,29 @@ func AEAD(ctx context.Context, uri, credential string) (tink.AEAD, error) {
 }
 
 func gcpAEAD(ctx context.Context, uri, credential string) (tink.AEAD, error) {
-	var opts []gcpkms.Option
-	if credential != "" {
-		if _, err := os.Stat(credential); err != nil {
-			return nil, fmt.Errorf("credential file: %w", err)
-		}
-		opts = append(opts, gcpkms.WithGoogleAPIClientOptions(option.WithCredentialsFile(credential))) //nolint:staticcheck // SA1019; its replacement changes which credential files load: backlog plan gcp-credential-file-deprecation
+	opts, err := gcpOptions(credential)
+	if err != nil {
+		return nil, err
 	}
-	c, err := gcpkms.NewClient(ctx, gcpPrefix, opts...)
+	c, err := gcpkms.NewClient(ctx, gcpPrefix, gcpkms.WithGoogleAPIClientOptions(opts...))
 	if err != nil {
 		return nil, err
 	}
 	return c.GetAEAD(uri)
+}
+
+// gcpOptions returns the Google API client options for credential. The SDK
+// gets a logger that discards everything: GOOGLE_SDK_GO_LOGGING_LEVEL=debug
+// would print tokens and the keyset plaintext of every KMS request.
+func gcpOptions(credential string) ([]option.ClientOption, error) {
+	opts := []option.ClientOption{option.WithLogger(slog.New(slog.DiscardHandler))}
+	if credential != "" {
+		if _, err := os.Stat(credential); err != nil {
+			return nil, fmt.Errorf("credential file: %w", err)
+		}
+		opts = append(opts, option.WithCredentialsFile(credential)) //nolint:staticcheck // SA1019; its replacement changes which credential files load: backlog plan gcp-credential-file-deprecation
+	}
+	return opts, nil
 }
 
 func awsAEAD(ctx context.Context, uri, credential string) (tink.AEAD, error) {

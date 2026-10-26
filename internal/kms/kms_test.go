@@ -2,10 +2,21 @@ package kms
 
 import (
 	"context"
+	"crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/json"
+	"encoding/pem"
+	"net"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
+
+	"github.com/tink-crypto/tink-go-gcpkms/v2/integration/gcpkms"
+	"github.com/tink-crypto/tink-go/v2/tink"
+	"google.golang.org/api/option"
 )
 
 const (
@@ -86,6 +97,74 @@ func TestGCP(t *testing.T) {
 	_, err = AEAD(context.Background(), gcpURI, secretFile(t, `{"type":"service_account","private_key":"`+secret+`"}`))
 	if err != nil && strings.Contains(err.Error(), secret) {
 		t.Errorf("error %q prints the credential", err)
+	}
+}
+
+// TestGCPSDKLoggingSilent runs a GCP KMS encrypt with the SDK's debug
+// logging turned on and checks that nothing reaches stderr: the SDK would
+// log the request, whose plaintext is the keyset. The endpoint is a closed
+// local port, so nothing leaves the machine.
+func TestGCPSDKLoggingSilent(t *testing.T) {
+	t.Setenv("GOOGLE_SDK_GO_LOGGING_LEVEL", "debug")
+	key, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		t.Fatal(err)
+	}
+	der, err := x509.MarshalPKCS8PrivateKey(key)
+	if err != nil {
+		t.Fatal(err)
+	}
+	sa, err := json.Marshal(map[string]string{
+		"type":           "service_account",
+		"project_id":     "p",
+		"private_key_id": "k",
+		"private_key":    string(pem.EncodeToMemory(&pem.Block{Type: "PRIVATE KEY", Bytes: der})),
+		"client_email":   "circe-test@p.iam.gserviceaccount.com",
+		"token_uri":      "http://127.0.0.1:1/token",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	l, err := net.Listen("tcp", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	endpoint := l.Addr().String()
+	l.Close()
+
+	stderr, err := os.CreateTemp(t.TempDir(), "stderr")
+	if err != nil {
+		t.Fatal(err)
+	}
+	orig := os.Stderr
+	os.Stderr = stderr
+	defer func() { os.Stderr = orig }()
+
+	opts, err := gcpOptions(secretFile(t, string(sa)))
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	c, err := gcpkms.NewClient(ctx, gcpPrefix, gcpkms.WithGoogleAPIClientOptions(append(opts, option.WithEndpoint(endpoint))...))
+	if err != nil {
+		t.Fatal(err)
+	}
+	a, err := c.GetAEAD(gcpURI)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.(tink.AEADWithContext).EncryptWithContext(ctx, []byte(secret), nil); err == nil {
+		t.Fatal("encrypt against a closed port succeeded")
+	}
+
+	os.Stderr = orig
+	out, err := os.ReadFile(stderr.Name())
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(out) > 0 {
+		t.Errorf("SDK wrote %d bytes to stderr:\n%s", len(out), out)
 	}
 }
 
