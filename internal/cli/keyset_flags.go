@@ -90,7 +90,7 @@ func (f *outFlags) emit(cmd *cobra.Command, b []byte) error {
 	}
 	file, err := os.OpenFile(f.path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o600)
 	if errors.Is(err, fs.ErrExist) {
-		return fmt.Errorf("%s exists; circe never overwrites a file", f.path)
+		return existsError(f.path)
 	}
 	if err != nil {
 		return err
@@ -100,4 +100,9 @@ func (f *outFlags) emit(cmd *cobra.Command, b []byte) error {
 		return err
 	}
 	return file.Close()
+}
+
+// existsError refuses to overwrite path.
+func existsError(path string) error {
+	return fmt.Errorf("%s exists; circe never overwrites a file", path)
 }

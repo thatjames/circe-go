@@ -1,9 +1,12 @@
 package cli
 
 import (
+	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -80,6 +83,46 @@ func (p *primitiveFlags) readData(cmd *cobra.Command) ([]byte, string, error) {
 // write writes a finished result to --out or stdout.
 func (p *primitiveFlags) write(cmd *cobra.Command, b []byte) error {
 	return p.out.emit(cmd, b)
+}
+
+// openData opens the data, --in or stdin, to stream it.
+func (p *primitiveFlags) openData(cmd *cobra.Command) (io.ReadCloser, error) {
+	if p.in == "" {
+		return io.NopCloser(cmd.InOrStdin()), nil
+	}
+	return os.Open(p.in)
+}
+
+// stream runs copy into the output. On stdout it streams. With --out it
+// streams into a temporary file (mode 0600) in the same directory, which is
+// linked to --out only when copy succeeds, so a failure writes nothing and
+// an existing file is never overwritten.
+func (p *primitiveFlags) stream(cmd *cobra.Command, copy func(io.Writer) error) error {
+	path := p.out.path
+	if path == "" {
+		return copy(cmd.OutOrStdout())
+	}
+	if _, err := os.Lstat(path); err == nil {
+		return existsError(path)
+	}
+	tmp, err := os.CreateTemp(filepath.Dir(path), "."+filepath.Base(path)+".*")
+	if err != nil {
+		return err
+	}
+	defer os.Remove(tmp.Name())
+	if err := copy(tmp); err != nil {
+		tmp.Close()
+		return err
+	}
+	if err := tmp.Close(); err != nil {
+		return err
+	}
+	if err := os.Link(tmp.Name(), path); errors.Is(err, fs.ErrExist) {
+		return existsError(path)
+	} else if err != nil {
+		return err
+	}
+	return nil
 }
 
 // bytesFlags give one input as text (--associated-data) or as a file

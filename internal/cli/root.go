@@ -90,6 +90,7 @@ func newRoot() *cobra.Command {
 		newConvertKeyset(),
 		newAEAD(),
 		newDAEAD(),
+		newStreamingAEAD(),
 	)
 	for _, c := range root.Commands() {
 		if c.Args == nil {
