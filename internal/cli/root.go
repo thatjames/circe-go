@@ -95,6 +95,8 @@ func newRoot() *cobra.Command {
 		newPRF(),
 		newSignature(),
 		newHybrid(),
+		newJWTMAC(),
+		newJWTSignature(),
 	)
 	for _, c := range root.Commands() {
 		if c.Args == nil {

@@ -41,11 +41,17 @@ accept, and a check of why a service rejects one.
   `--expect-issued-in-the-past`, `--clock-skew <duration>` (at most 10m,
   Tink's limit) and `--fixed-now <RFC 3339 time>` (for fixtures and
   debugging).
+  - Flags Tink refuses are usage errors, exit 2: a clock skew over 10m, a
+    `--fixed-now` that is not RFC 3339, or an expected value given with
+    its ignore flag (for example `--expected-issuer` with `--ignore-issuer`).
   - On success it writes the verified claims as JSON
     (`VerifiedJWT.JSONPayload`) and a newline, and exits 0.
   - On failure it prints `circe: JWT verification failed: <Tink's reason>`
     and exits 3. The reason says, for example, that the token expired or
-    that the issuer did not match, and never contains the token.
+    that the issuer did not match, and never contains the token. tink-go
+    quotes a segment of the token when that segment is not base64url, so
+    a reason that holds any segment of the token is replaced by
+    `the token is not a valid JWS compact serialization`.
 - JWTs are text already, so these commands take no `--encoding`.
 - Other flags and errors: [primitive commands](/primitives/primitive-commands.md).
 
