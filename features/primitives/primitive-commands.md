@@ -4,7 +4,7 @@ title: Primitive commands
 description: Shared shape of circe's per-primitive commands (aead, daead, streaming-aead, mac, prf, signature, hybrid, JWT) - --keyset and its KMS flags, data on --in/--out, --encoding raw|base64|hex, and wrong-keyset and verification errors.
 status: draft
 code:
-  - internal/cli/primitive_flags*.go
+  - internal/cli/primitive*.go
   - internal/cli/encoding*.go
 tags: [cli, tink, primitives]
 generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T15:20:00Z }
@@ -45,10 +45,14 @@ same way.
     names the input and the encoding.
 - The primary key encrypts, signs and computes. Decrypt and verify try
   every enabled key, matched by output prefix, as Tink does.
-- A keyset that holds no key of the group's primitive is an error naming
-  the keyset, the primitive the command expected and the key type found,
-  for example `circe: k.json is not an AEAD keyset (type.googleapis.com/google.crypto.tink.HmacKey)`.
-  The exit code is 1.
+- A keyset with an enabled key that is not of the group's primitive is an
+  error naming the keyset, the primitive the command expected and the
+  first such key type found, for example
+  `circe: k.json is not an AEAD keyset (type.googleapis.com/google.crypto.tink.HmacKey)`.
+  The exit code is 1. circe knows each primitive's key types from
+  tink-go, and this check comes before the private-or-public check, so a
+  private hybrid keyset given to `signature verify` is the wrong
+  primitive, not the wrong kind.
 - A failed decryption or verification prints `circe: <operation> failed`
   on stderr and exits 3. Nothing goes to stdout and no `--out` file is
   written. Exit 3 means only that the data did not decrypt or verify.

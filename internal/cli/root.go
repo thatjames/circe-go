@@ -34,6 +34,14 @@ func (e usageError) Unwrap() error { return e.err }
 
 func usagef(format string, a ...any) error { return usageError{fmt.Errorf(format, a...)} }
 
+// failedError is data that did not decrypt or verify; it exits 3.
+type failedError struct{ msg string }
+
+func (e failedError) Error() string { return e.msg }
+
+// failed reports that an operation, such as "decryption", failed.
+func failed(operation string) error { return failedError{operation + " failed"} }
+
 // noArgs rejects positional arguments as a usage error.
 func noArgs(cmd *cobra.Command, args []string) error {
 	if len(args) > 0 {
@@ -80,6 +88,8 @@ func newRoot() *cobra.Command {
 		newListKeyset(),
 		newListKeyTemplates(),
 		newConvertKeyset(),
+		newAEAD(),
+		newDAEAD(),
 	)
 	for _, c := range root.Commands() {
 		if c.Args == nil {
@@ -105,6 +115,10 @@ func Run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	if errors.As(err, &ue) {
 		fmt.Fprint(stderr, cmd.UsageString())
 		return 2
+	}
+	var fe failedError
+	if errors.As(err, &fe) {
+		return 3
 	}
 	return 1
 }
