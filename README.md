@@ -34,12 +34,36 @@ differ, they keep tinkey's names.
 
 ## Install
 
+circe supports Linux and macOS.
+
+### With Go
+
 ```sh
 go install github.com/thatjames/circe-go/cmd/circe@latest
 ```
 
-circe is pure Go (built with `CGO_ENABLED=0`) and needs Go 1.27 or later.
-It supports Linux and macOS.
+Note the `/cmd/circe`: the module root is the library, not the command,
+so `go install github.com/thatjames/circe-go@latest` fails with "not a
+main package". The binary lands in `$(go env GOPATH)/bin` (usually
+`~/go/bin`), which must be on your `PATH`. Building needs Go 1.27 or
+later; circe is pure Go (`CGO_ENABLED=0`). Pin a version with
+`@vX.Y.Z` in place of `@latest`.
+
+### Without Go
+
+Each [release](https://github.com/thatjames/circe-go/releases/latest)
+has a static binary for linux and darwin, amd64 and arm64, as
+`circe_<version>_<os>_<arch>.tar.gz` (version without the `v`), with
+SHA-256 sums in `checksums.txt`:
+
+```sh
+VERSION=1.0.2 OS=linux ARCH=amd64
+curl -fsSLO https://github.com/thatjames/circe-go/releases/download/v${VERSION}/circe_${VERSION}_${OS}_${ARCH}.tar.gz
+curl -fsSLO https://github.com/thatjames/circe-go/releases/download/v${VERSION}/checksums.txt
+sha256sum --ignore-missing -c checksums.txt   # macOS: shasum -a 256 --ignore-missing -c checksums.txt
+tar -xzf circe_${VERSION}_${OS}_${ARCH}.tar.gz circe
+install -m 0755 circe ~/.local/bin/   # or any directory on your PATH
+```
 
 ## Usage
 
