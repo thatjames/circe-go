@@ -20,7 +20,7 @@ func newStreamingAEAD() *cobra.Command {
 // raw bytes, so there is no --encoding.
 func newStreamingCommand(use, short string, decrypt bool) *cobra.Command {
 	cmd := &cobra.Command{Use: use, Short: short}
-	flags := addPrimitiveFlags(cmd)
+	flags := addPrimitiveFlags(cmd, true)
 	adFlags := addBytesFlags(cmd, "associated-data")
 	cmd.RunE = func(cmd *cobra.Command, _ []string) error {
 		ad, err := adFlags.get(cmd)

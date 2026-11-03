@@ -17,7 +17,8 @@ example identifiers, that a service derives with a PRF keyset.
 # Behavior
 - `circe prf compute --keyset <k> --output-length <n>` runs
   `prf.NewPRFSet(h)` and `ComputePrimaryPRF(input, n)` on `--in`, and
-  writes `n` bytes. `--output-length` is required and must be at least 1.
+  writes `n` bytes. `--output-length` is required and must be at least 1;
+  a missing, zero or negative length is a usage error, exit 2.
 - A length larger than the primary PRF allows is an error that names the
   limit, exit 1. The limits: HMAC-PRF the hash size, AES-CMAC-PRF 16
   bytes, HKDF-PRF 255 times the hash size. circe reads them from the

@@ -33,7 +33,8 @@ same way.
   to `--out <path>` (default: stdout). `--out` follows the
   [command surface](/cli/command-surface.md) rules: it never overwrites a
   file, a file it creates has mode 0600 (decrypted data is secret), and
-  nothing is written when the command fails.
+  nothing is written when the command fails. Commands that only verify
+  (`mac verify`, `signature verify`) write nothing and have no `--out`.
 - `--encoding raw|base64|hex` (default `raw`) is the encoding of the bytes
   Tink produces: ciphertexts, MAC tags, signatures and PRF output. It
   applies to them both as output (encrypt, compute, sign) and as input

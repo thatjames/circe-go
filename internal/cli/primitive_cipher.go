@@ -23,7 +23,7 @@ type cipherCommand[P any] struct {
 
 func (c cipherCommand[P]) command() *cobra.Command {
 	cmd := &cobra.Command{Use: c.use, Short: c.short}
-	flags := addPrimitiveFlags(cmd)
+	flags := addPrimitiveFlags(cmd, true)
 	enc := addEncodingFlag(cmd)
 	extraFlags := addBytesFlags(cmd, c.extra)
 	cmd.RunE = func(cmd *cobra.Command, _ []string) error {

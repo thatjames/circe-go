@@ -34,19 +34,21 @@ func newGroup(use, short string, ops ...*cobra.Command) *cobra.Command {
 
 // primitiveFlags are the flags every primitive command shares: the keyset it
 // uses (--keyset, --keyset-format and the KMS flags, only ever read) and its
-// data (--in, --out).
+// data (--in, and --out unless it only verifies).
 type primitiveFlags struct {
 	keyset inFlags
 	in     string
 	out    outFlags
 }
 
-func addPrimitiveFlags(cmd *cobra.Command) *primitiveFlags {
+func addPrimitiveFlags(cmd *cobra.Command, output bool) *primitiveFlags {
 	p := &primitiveFlags{keyset: inFlags{format: keysetio.JSON, kms: addKMSFlags(cmd, "")}}
 	cmd.Flags().StringVar(&p.keyset.path, "keyset", "", "read the keyset from this file (required)")
 	cmd.Flags().Var(&p.keyset.format, "keyset-format", "keyset format: json or binary")
 	cmd.Flags().StringVar(&p.in, "in", "", "read the data from this file (default: stdin)")
-	cmd.Flags().StringVar(&p.out.path, "out", "", "write the result to this new file (default: stdout); never overwrites")
+	if output {
+		cmd.Flags().StringVar(&p.out.path, "out", "", "write the result to this new file (default: stdout); never overwrites")
+	}
 	return p
 }
 
