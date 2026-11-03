@@ -93,6 +93,8 @@ func newRoot() *cobra.Command {
 		newStreamingAEAD(),
 		newMAC(),
 		newPRF(),
+		newSignature(),
+		newHybrid(),
 	)
 	for _, c := range root.Commands() {
 		if c.Args == nil {
