@@ -7,7 +7,7 @@ code:
   - internal/cli/primitive_flags*.go
   - internal/cli/encoding*.go
 tags: [cli, tink, primitives]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T14:30:13Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T15:20:00Z }
 ---
 
 # Intent
@@ -61,7 +61,8 @@ same way.
   operation that needs the private keyset (sign, hybrid decrypt, JWT
   sign) refuses a public one. Both are errors naming the keyset and the
   kind of keyset needed, exit 1. The first error also says to run
-  `circe create-public-keyset`.
+  `circe create-public-keyset`. A keyset is private when
+  `keyset.Handle.Public()` succeeds on it, and public otherwise.
 - No error message holds key material, plaintext or associated data.
 - Tests run every operation with synthetic keysets made from
   [key templates](/keyset/key-templates.md): round trips, every encoding,

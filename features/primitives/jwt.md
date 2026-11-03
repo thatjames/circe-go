@@ -6,7 +6,7 @@ status: draft
 code:
   - internal/cli/jwt*.go
 tags: [cli, tink, primitives, jwt]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T14:30:13Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T15:20:00Z }
 ---
 
 # Intent
@@ -31,7 +31,9 @@ accept, and a check of why a service rejects one.
     `nbf` and `iat` are numbers, `aud` is a string or an array of
     strings). Any other value is an error naming the claim.
   - Claims without `exp` are refused unless `--without-expiration` is
-    given, the same rule as Tink's `RawJWTOptions`.
+    given, and claims with `exp` are refused when it is given: the same
+    rules as Tink's `RawJWTOptions`. Both are errors, exit 1.
+  - Input that is not a JSON object is an error, exit 1.
 - Verify reads a compact JWT on `--in` (surrounding whitespace ignored).
   It builds a `jwt.Validator` from `--expected-type-header`,
   `--expected-issuer`, `--expected-audience`, `--ignore-type-header`,
@@ -48,12 +50,17 @@ accept, and a check of why a service rejects one.
 - Other flags and errors: [primitive commands](/primitives/primitive-commands.md).
 
 # Interfaces
-- tink-go `jwt.NewMAC`, `jwt.NewSigner`, `jwt.NewVerifier`, `jwt.RawJWT`,
-  `jwt.NewValidator`.
+- tink-go `jwt.NewMAC`, `jwt.NewSigner`, `jwt.NewVerifier`,
+  `jwt.NewRawJWTFromJSON`, `jwt.NewValidator`.
 
 # Decisions
 - **`jwt-mac` and `jwt-signature`** (user, 2026-11-03): one command group
   per Tink JWT primitive, the rule every other group follows. One `jwt`
   group that guessed the primitive from the keyset was rejected.
+- **Claims through `jwt.NewRawJWTFromJSON`** (user, 2026-11-03): it
+  keeps the claims exactly as given and checks the registered claim
+  types, as Tink's own decoder does. Its doc comment points users to
+  `NewRawJWT`, which would mean rebuilding `RawJWTOptions` from the JSON.
+  It does not apply the `exp` rules, so circe checks them itself.
 - JWK set import and export (`jwt.JWKSetFromPublicKeysetHandle`) is out
   of scope. It would be a keyset command and gets its own plan.
