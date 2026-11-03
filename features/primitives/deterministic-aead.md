@@ -2,12 +2,12 @@
 type: Feature
 title: Deterministic AEAD encrypt and decrypt
 description: circe daead encrypt and decrypt run Tink's deterministic AEAD on --in with a DAEAD keyset; equal input and associated data give an equal ciphertext.
-status: draft
+status: stable
 code:
   - internal/cli/daead.go
   - internal/cli/daead_test.go
 tags: [cli, tink, primitives, daead]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T14:30:13Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T17:00:00Z }
 ---
 
 # Intent

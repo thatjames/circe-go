@@ -1,7 +1,7 @@
 ---
 type: Feature
 title: Command surface
-description: The circe binary is a cobra CLI with one subcommand per tinkey operation, shared keyset input/output flags, and errors on stderr with exit 1.
+description: The circe binary is a cobra CLI with one subcommand per tinkey operation and one command group per Tink primitive, shared keyset input/output flags, and errors on stderr with exit 1, usage errors 2 and failed decryption or verification 3.
 status: stable
 code:
   - cmd/circe/**
@@ -10,7 +10,7 @@ code:
   - internal/cli/keyset_flags.go
   - internal/cli/keyset_flags_test.go
 tags: [cli, cobra]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-22T19:45:23Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T17:00:00Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -33,12 +33,16 @@ formats, not with the Java tinkey CLI's command or flag spelling.
 - Subcommands: see [create keyset](/keyset/create-keyset.md),
   [key management](/keyset/key-management.md),
   [public keyset](/keyset/public-keyset.md),
-  [inspect and convert](/keyset/inspect-convert.md).
-- Commands that read a keyset take `--in <path>` (default: stdin) and
+  [inspect and convert](/keyset/inspect-convert.md), and the primitive
+  groups `aead`, `daead`, `streaming-aead`, `mac`, `prf`, `signature`,
+  `hybrid`, `jwt-mac` and `jwt-signature`
+  ([primitive commands](/primitives/primitive-commands.md)).
+- Keyset commands that read a keyset take `--in <path>` (default: stdin) and
   `--in-format json|binary` (default `json`). Commands that write one take
   `--out <path>` (default: stdout) and `--out-format json|binary`
   (default `json`). Reading and writing go through
-  [keyset I/O](/keyset/keyset-io.md).
+  [keyset I/O](/keyset/keyset-io.md). On the primitive commands `--in`
+  and `--out` are the data, and the keyset is `--keyset`.
 - `--out` refuses to overwrite an existing file and exits 1, so a keyset
   is never lost by a typo. The output is built in memory first and
   written only when the command succeeds, so a failing command writes
@@ -49,7 +53,10 @@ formats, not with the Java tinkey CLI's command or flag spelling.
 - Errors go to stderr as one line, `circe: <message>`, exit code 1.
   Usage errors (unknown command or flag, a bad flag value such as
   `--in-format yaml`, a missing required flag, a stray argument) print
-  `circe: <message>` and the command's usage on stderr and exit 2.
+  `circe: <message>` and the command's usage on stderr and exit 2. A
+  failed decryption or verification on a primitive command prints
+  `circe: <operation> failed` and exits 3, so a script can tell invalid
+  data from a broken call.
 - Output on stdout is only the requested data (keyset, listing), so it
   can be piped.
 
@@ -73,3 +80,4 @@ formats, not with the Java tinkey CLI's command or flag spelling.
   that run it with synthetic keysets.
 - **`--out` never overwrites; exit 1 for errors, 2 for usage errors**
   (user, 2026-10-22).
+- **Exit 3 for a failed decryption or verification** (user, 2026-11-03).

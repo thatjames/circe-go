@@ -2,12 +2,12 @@
 type: Feature
 title: Signature sign and verify
 description: circe signature sign signs --in with a private signature keyset; circe signature verify checks a --signature against --in with the public keyset and exits 0, or 3 when it does not verify.
-status: draft
+status: stable
 code:
   - internal/cli/signature.go
   - internal/cli/signature_test.go
 tags: [cli, tink, primitives, signature]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T14:30:13Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T17:00:00Z }
 ---
 
 # Intent

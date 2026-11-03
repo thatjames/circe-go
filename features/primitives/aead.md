@@ -2,12 +2,12 @@
 type: Feature
 title: AEAD encrypt and decrypt
 description: circe aead encrypt and decrypt run Tink's AEAD primitive on --in with an AEAD keyset and optional associated data.
-status: draft
+status: stable
 code:
   - internal/cli/aead.go
   - internal/cli/aead_test.go
 tags: [cli, tink, primitives, aead]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T14:30:13Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T17:00:00Z }
 ---
 
 # Intent

@@ -2,12 +2,12 @@
 type: Feature
 title: Primitive commands
 description: Shared shape of circe's per-primitive commands (aead, daead, streaming-aead, mac, prf, signature, hybrid, JWT) - --keyset and its KMS flags, data on --in/--out, --encoding raw|base64|hex, and wrong-keyset and verification errors.
-status: draft
+status: stable
 code:
   - internal/cli/primitive*.go
   - internal/cli/encoding*.go
 tags: [cli, tink, primitives]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T15:20:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T17:00:00Z }
 ---
 
 # Intent

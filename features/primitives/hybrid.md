@@ -2,12 +2,12 @@
 type: Feature
 title: Hybrid encrypt and decrypt
 description: circe hybrid encrypt encrypts --in to a public hybrid keyset with optional context info; circe hybrid decrypt decrypts with the private keyset.
-status: draft
+status: stable
 code:
   - internal/cli/hybrid.go
   - internal/cli/hybrid_test.go
 tags: [cli, tink, primitives, hybrid]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T14:30:13Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T17:00:00Z }
 ---
 
 # Intent

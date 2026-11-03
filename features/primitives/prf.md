@@ -2,12 +2,12 @@
 type: Feature
 title: PRF compute
 description: circe prf compute --output-length <n> writes n bytes of the keyset's primary PRF over --in.
-status: draft
+status: stable
 code:
   - internal/cli/prf.go
   - internal/cli/prf_test.go
 tags: [cli, tink, primitives, prf]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T15:20:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T17:00:00Z }
 ---
 
 # Intent

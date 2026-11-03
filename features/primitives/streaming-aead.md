@@ -2,12 +2,12 @@
 type: Feature
 title: Streaming AEAD encrypt and decrypt
 description: circe streaming-aead encrypt and decrypt stream --in to --out in constant memory with Tink's streaming AEAD; raw bytes only, and a failed decrypt leaves no --out file.
-status: draft
+status: stable
 code:
   - internal/cli/streaming_aead.go
   - internal/cli/streaming_aead_test.go
 tags: [cli, tink, primitives, streaming-aead]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T16:00:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T17:00:00Z }
 ---
 
 # Intent

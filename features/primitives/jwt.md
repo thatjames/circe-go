@@ -2,11 +2,11 @@
 type: Feature
 title: JWT MAC and signature
 description: circe signs or MACs a JWT claims JSON into a compact JWT with a Tink JWT keyset, and verifies a compact JWT against Tink validator flags, printing its verified claims.
-status: draft
+status: stable
 code:
   - internal/cli/jwt*.go
 tags: [cli, tink, primitives, jwt]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T15:20:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T17:00:00Z }
 ---
 
 # Intent

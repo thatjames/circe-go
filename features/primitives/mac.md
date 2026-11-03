@@ -2,12 +2,12 @@
 type: Feature
 title: MAC compute and verify
 description: circe mac compute writes the Tink MAC tag of --in; circe mac verify checks a --tag against --in and exits 0, or 3 when it does not match.
-status: draft
+status: stable
 code:
   - internal/cli/mac.go
   - internal/cli/mac_test.go
 tags: [cli, tink, primitives, mac]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T14:30:13Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T17:00:00Z }
 ---
 
 # Intent

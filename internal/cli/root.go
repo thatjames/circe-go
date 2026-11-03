@@ -64,8 +64,8 @@ func required(name, value string) error {
 func newRoot() *cobra.Command {
 	root := &cobra.Command{
 		Use:           "circe",
-		Short:         "circe manages Tink keysets",
-		Long:          "circe creates, manages, inspects and converts Tink keysets, on tink-go.",
+		Short:         "circe manages and uses Tink keysets",
+		Long:          "circe creates, manages, inspects and converts Tink keysets, and encrypts, decrypts, signs, verifies and computes MACs and PRFs with them, on tink-go.",
 		Version:       versionString(),
 		Args:          noArgs,
 		SilenceErrors: true,
