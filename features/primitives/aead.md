@@ -7,7 +7,7 @@ code:
   - internal/cli/aead.go
   - internal/cli/aead_test.go
 tags: [cli, tink, primitives, aead]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T11:20:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T14:30:13Z }
 ---
 
 # Intent
@@ -19,7 +19,7 @@ can encrypt and decrypt with the same keyset its services use.
   on the whole of `--in` and writes the ciphertext.
 - `circe aead decrypt --keyset <k>` runs `Decrypt(ciphertext, ad)` and
   writes the plaintext. A wrong key, wrong associated data or a tampered
-  ciphertext is `circe: decryption failed`, exit 1.
+  ciphertext is `circe: decryption failed`, exit 3.
 - `--associated-data <text>` or `--associated-data-file <path>` gives the
   associated data. The two flags are mutually exclusive (giving both is a
   usage error, exit 2). The default is empty.

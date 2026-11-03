@@ -7,7 +7,7 @@ code:
   - internal/cli/primitive_flags*.go
   - internal/cli/encoding*.go
 tags: [cli, tink, primitives]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T11:20:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T14:30:13Z }
 ---
 
 # Intent
@@ -50,9 +50,18 @@ same way.
   for example `circe: k.json is not an AEAD keyset (type.googleapis.com/google.crypto.tink.HmacKey)`.
   The exit code is 1.
 - A failed decryption or verification prints `circe: <operation> failed`
-  on stderr and exits 1. Nothing goes to stdout and no `--out` file is
-  written. A successful verify prints nothing and exits 0, so scripts can
-  write `if circe signature verify ...`.
+  on stderr and exits 3. Nothing goes to stdout and no `--out` file is
+  written. Exit 3 means only that the data did not decrypt or verify.
+  Every other error (unreadable keyset, wrong primitive, bad encoding,
+  I/O) is still 1, and usage errors are 2, so a script can tell an
+  invalid signature from a broken call. A successful verify prints
+  nothing and exits 0, so scripts can write `if circe signature verify ...`.
+- An operation that Tink runs with a public keyset (signature verify,
+  hybrid encrypt, JWT signature verify) refuses a private keyset, and an
+  operation that needs the private keyset (sign, hybrid decrypt, JWT
+  sign) refuses a public one. Both are errors naming the keyset and the
+  kind of keyset needed, exit 1. The first error also says to run
+  `circe create-public-keyset`.
 - No error message holds key material, plaintext or associated data.
 - Tests run every operation with synthetic keysets made from
   [key templates](/keyset/key-templates.md): round trips, every encoding,
@@ -75,6 +84,13 @@ same way.
 - **Raw bytes by default, `--encoding` for text** (user, 2026-11-03).
 - **All tink-go primitives** (user, 2026-11-03): AEAD, deterministic AEAD,
   streaming AEAD, MAC, PRF, signature, hybrid and JWT.
+- **Exit 3 for a failed decryption or verification** (user, 2026-11-03):
+  scripts can tell "invalid" from "broken" by the exit code alone. This
+  adds a third code to the [command surface](/cli/command-surface.md)'s
+  1 and 2.
+- **Public keyset where Tink wants one** (user, 2026-11-03): circe never
+  derives the public part of a private keyset for an operation. The user
+  runs `create-public-keyset` first, as Tink's own factories expect.
 - **`--keyset`, not `--in`, for the keyset** (2026-11-03, proposed): on
   these commands `--in` is the data, so the keyset needs a flag of its
   own.

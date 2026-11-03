@@ -7,7 +7,7 @@ code:
   - internal/cli/streaming_aead.go
   - internal/cli/streaming_aead_test.go
 tags: [cli, tink, primitives, streaming-aead]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T11:20:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T14:30:13Z }
 ---
 
 # Intent
@@ -29,7 +29,7 @@ artifacts, without holding them in memory.
   and is removed when it fails. This keeps the write-on-success rule
   without buffering in memory. On stdout, plaintext that was already
   written before an authentication failure cannot be taken back: the
-  command still exits 1 with `circe: decryption failed`, and the README
+  command still exits 3 with `circe: decryption failed`, and the README
   tells users to decrypt to a file when that matters.
 - Flags and errors: [primitive commands](/primitives/primitive-commands.md).
 

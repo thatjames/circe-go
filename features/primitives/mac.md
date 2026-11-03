@@ -1,13 +1,13 @@
 ---
 type: Feature
 title: MAC compute and verify
-description: circe mac compute writes the Tink MAC tag of --in; circe mac verify checks a --tag against --in and exits 0 or 1.
+description: circe mac compute writes the Tink MAC tag of --in; circe mac verify checks a --tag against --in and exits 0, or 3 when it does not match.
 status: draft
 code:
   - internal/cli/mac.go
   - internal/cli/mac_test.go
 tags: [cli, tink, primitives, mac]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T11:20:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T14:30:13Z }
 ---
 
 # Intent
@@ -20,7 +20,7 @@ that services produced.
 - `circe mac verify --keyset <k> --tag <path>` runs `VerifyMAC(tag, data)`
   with the data on `--in`. `--tag` is required and is read in
   `--encoding`. A tag that does not match is `circe: MAC verification failed`,
-  exit 1. A match prints nothing and exits 0.
+  exit 3. A match prints nothing and exits 0.
 - Flags, encoding and errors: [primitive commands](/primitives/primitive-commands.md).
 
 # Interfaces
