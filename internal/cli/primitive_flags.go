@@ -95,14 +95,14 @@ func (p *primitiveFlags) openData(cmd *cobra.Command) (io.ReadCloser, error) {
 	return os.Open(p.in)
 }
 
-// stream runs copy into the output. On stdout it streams. With --out it
+// stream runs send into the output. On stdout it streams. With --out it
 // streams into a temporary file (mode 0600) in the same directory, which is
-// linked to --out only when copy succeeds, so a failure writes nothing and
+// linked to --out only when send succeeds, so a failure writes nothing and
 // an existing file is never overwritten.
-func (p *primitiveFlags) stream(cmd *cobra.Command, copy func(io.Writer) error) error {
+func (p *primitiveFlags) stream(cmd *cobra.Command, send func(io.Writer) error) error {
 	path := p.out.path
 	if path == "" {
-		return copy(cmd.OutOrStdout())
+		return send(cmd.OutOrStdout())
 	}
 	if _, err := os.Lstat(path); err == nil {
 		return existsError(path)
@@ -112,7 +112,7 @@ func (p *primitiveFlags) stream(cmd *cobra.Command, copy func(io.Writer) error) 
 		return err
 	}
 	defer os.Remove(tmp.Name())
-	if err := copy(tmp); err != nil {
+	if err := send(tmp); err != nil {
 		tmp.Close()
 		return err
 	}
