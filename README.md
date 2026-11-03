@@ -22,7 +22,9 @@ Every line of code (for all intents and purposes) was written by claude. I am a 
 keysets, written in Go on [tink-go](https://github.com/tink-crypto/tink-go).
 It does what Tink's `tinkey` does: create and manage keysets, inspect and
 convert them, and keep them encrypted with a key in GCP KMS, AWS KMS or
-HashiCorp Vault.
+HashiCorp Vault. It also uses them: it encrypts, decrypts, signs,
+verifies and computes MACs and PRFs with every Tink primitive, in Tink's
+wire format.
 
 ## Tink's API, not Java tinkey's CLI
 
@@ -127,7 +129,70 @@ Keysets are read from `--in` (default stdin) and written to `--out`
 `--out-format`). `--out` never overwrites an existing file. Errors exit
 1; usage errors exit 2.
 
-More commands land as circe grows.
+## Primitive commands
+
+There is one command group per Tink primitive: `circe <primitive>
+<operation>`. On these commands `--keyset` names the keyset (with
+`--keyset-format`, `--master-key-uri` and `--credential` as above; the
+keyset is only read), `--in` is the data (default stdin) and `--out` the
+result (default stdout, never overwritten, mode 0600).
+
+```sh
+# AEAD and deterministic AEAD, with optional --associated-data or --associated-data-file.
+circe aead encrypt --keyset aead.json --in secret.txt --out secret.enc
+circe aead decrypt --keyset aead.json --in secret.enc
+circe daead encrypt --keyset siv.json --associated-data users --encoding base64 <<< 'alice@example.com'
+
+# Streaming AEAD for files of any size, in constant memory. Raw bytes only.
+circe streaming-aead encrypt --keyset stream.json --in backup.tar --out backup.tar.enc
+
+# MAC and PRF.
+circe mac compute --keyset mac.json --in config.yaml --encoding hex > config.tag
+circe mac verify --keyset mac.json --in config.yaml --tag config.tag --encoding hex
+circe prf compute --keyset prf.json --output-length 16 --encoding hex <<< 'user-42'
+
+# Signature: sign with the private keyset, verify with the public one.
+circe signature sign --keyset priv.json --in release.tar --out release.sig
+circe signature verify --keyset pub.json --in release.tar --signature release.sig
+
+# Hybrid: encrypt to the public keyset, decrypt with the private one.
+circe hybrid encrypt --keyset hpke-pub.json --context-info svc --in token.txt --out token.enc
+circe hybrid decrypt --keyset hpke-priv.json --context-info svc --in token.enc
+
+# JWT: claims JSON in, a compact JWT out; verify prints the verified claims.
+echo '{"iss":"circe","aud":"svc","exp":1893456000}' | circe jwt-mac compute --keyset hs256.json > token.jwt
+circe jwt-mac verify --keyset hs256.json --in token.jwt --expected-issuer circe --expected-audience svc
+circe jwt-signature sign --keyset es256-priv.json --in claims.json > token.jwt
+circe jwt-signature verify --keyset es256-pub.json --in token.jwt --expected-issuer circe --ignore-audiences
+```
+
+`--encoding raw|base64|hex` (default `raw`) is the encoding of the bytes
+Tink makes: ciphertexts, tags, signatures and PRF output, both as output
+and as the input of decrypt and verify. Encoded output ends in a newline.
+Verify commands print nothing on success. Signature verify, hybrid
+encrypt and JWT signature verify take only a public keyset; make it with
+`circe create-public-keyset`.
+
+Exit codes:
+
+| Code | Meaning |
+|------|---------|
+| 0 | Success; for verify, the tag, signature or token is valid. |
+| 1 | An error: unreadable keyset, a keyset of the wrong primitive or kind, bad encoding, I/O. |
+| 2 | A usage error: unknown command or flag, a missing required flag. |
+| 3 | The data did not decrypt or verify. |
+
+So a script can tell an invalid signature from a broken call:
+
+```sh
+if circe signature verify --keyset pub.json --in release.tar --signature release.sig; then ...
+```
+
+`streaming-aead decrypt` to stdout writes plaintext as it goes. When the
+stream turns out to be tampered with, the command exits 3, but the
+plaintext it already wrote cannot be taken back. Decrypt to a file with
+`--out` when that matters: the file appears only when the whole stream
+has decrypted.
 
 ## Licence
 
