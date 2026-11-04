@@ -8,7 +8,7 @@ code:
   - internal/keysetio/encrypted*.go
   - internal/cli/kms_flags*.go
 tags: [kms, gcp, aws, vault]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-26T09:07:48Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-03T17:00:00Z }
 verified: { by: human:slimjim, at: 2026-10-22T18:40:00Z }
 ---
 
@@ -56,6 +56,9 @@ Tink recommends, on the three backends the user works with.
   - `create-public-keyset` reads the private keyset encrypted and writes
     the public keyset in cleartext, as [public keyset](/keyset/public-keyset.md)
     says: it holds no secrets.
+  - The [primitive commands](/primitives/primitive-commands.md) read the
+    keyset named by `--keyset` encrypted (per `--keyset-format`) and never
+    write a keyset.
 - Reading an encrypted keyset without `--master-key-uri`, or a cleartext
   one with it, fails to parse and is an error; nothing is written.
 - `convert-keyset` takes `--new-master-key-uri` and `--new-credential`

@@ -30,6 +30,18 @@ okf_version: "0.2"
 
 * [KMS-encrypted keysets](/kms/encrypted-keysets.md) - --master-key-uri reads and writes KMS-encrypted keysets on every command (GCP KMS, AWS KMS, Vault), and convert-keyset moves keysets between cleartext and KMS keys.
 
+# Primitives
+
+* [Primitive commands](/primitives/primitive-commands.md) - Shared shape of circe's per-primitive commands (aead, daead, streaming-aead, mac, prf, signature, hybrid, JWT) - --keyset and its KMS flags, data on --in/--out, --encoding raw|base64|hex, and wrong-keyset and verification errors.
+* [AEAD encrypt and decrypt](/primitives/aead.md) - circe aead encrypt and decrypt run Tink's AEAD primitive on --in with an AEAD keyset and optional associated data.
+* [Deterministic AEAD encrypt and decrypt](/primitives/deterministic-aead.md) - circe daead encrypt and decrypt run Tink's deterministic AEAD on --in with a DAEAD keyset; equal input and associated data give an equal ciphertext.
+* [Streaming AEAD encrypt and decrypt](/primitives/streaming-aead.md) - circe streaming-aead encrypt and decrypt stream --in to --out in constant memory with Tink's streaming AEAD; raw bytes only, and a failed decrypt leaves no --out file.
+* [MAC compute and verify](/primitives/mac.md) - circe mac compute writes the Tink MAC tag of --in; circe mac verify checks a --tag against --in and exits 0, or 3 when it does not match.
+* [PRF compute](/primitives/prf.md) - circe prf compute --output-length <n> writes n bytes of the keyset's primary PRF over --in.
+* [Signature sign and verify](/primitives/signature.md) - circe signature sign signs --in with a private signature keyset; circe signature verify checks a --signature against --in with the public keyset and exits 0, or 3 when it does not verify.
+* [Hybrid encrypt and decrypt](/primitives/hybrid.md) - circe hybrid encrypt encrypts --in to a public hybrid keyset with optional context info; circe hybrid decrypt decrypts with the private keyset.
+* [JWT MAC and signature](/primitives/jwt.md) - circe signs or MACs a JWT claims JSON into a compact JWT with a Tink JWT keyset, and verifies a compact JWT against Tink validator flags, printing its verified claims.
+
 # Project
 
 * [Contributing guide, issue forms and pull request template](/project/contributing.md) - CONTRIBUTING.md tells contributors how to report, propose and build changes; issue forms collect complete bug reports and feature requests; changes land as squash-merged feature branches whose typed PR title drives the release notes.
