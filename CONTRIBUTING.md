@@ -61,18 +61,17 @@ environment.
 
 ```sh
 make                 # build ./circe (static, CGO_ENABLED=0)
-go test ./...
-go vet ./...
-golangci-lint run    # lint and format, config in .golangci.yml
-go mod tidy -diff    # must print nothing
-go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+make check           # every CI check: tidy, build, vet, test, lint, vuln
+make lint            # golangci-lint at the version pinned in lint.yml
+make vuln            # govulncheck
 make docker          # build the image circe:<latest tag>
 ```
 
 CI runs the same checks on Linux and macOS for every push and pull
-request (golangci-lint on Linux only); all of them must pass. Install
-the golangci-lint version pinned in `.github/workflows/lint.yml`
-(<https://golangci-lint.run/docs/welcome/install/>). Fix a finding
+request (golangci-lint on Linux only); all of them must pass, so run
+`make check` before you push. It needs only Go: `make lint` runs the
+golangci-lint version pinned in `.github/workflows/lint.yml` with
+`go run`, not one you have installed. Fix a finding
 rather than silence it; when a rule is wrong for one line, add
 `//nolint:<linter> // <reason>` there.
 
@@ -135,11 +134,7 @@ the release notes), GitHub Actions and the Docker base images
 (`chore(deps):`, left out). `govulncheck` runs on every push and pull
 request and every Monday, so a newly published vulnerability in a
 dependency fails the Vulnerabilities check on `main`. Run it locally
-with:
-
-```sh
-go run golang.org/x/vuln/cmd/govulncheck@latest ./...
-```
+with `make vuln`.
 
 ## AI-assisted contributions
 
