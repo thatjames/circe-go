@@ -8,7 +8,7 @@ code:
   - .github/ISSUE_TEMPLATE/**
   - .github/pull_request_template.md
 tags: [project, github, contributing]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T23:00:00Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-25T00:00:00Z }
 ---
 
 # Intent
@@ -20,8 +20,9 @@ questions, and to build, test and send a change without guessing.
 - `CONTRIBUTING.md` covers, in order: what circe is and is not (not a
   Google tool; the Tink API is the contract, the Java tinkey CLI is not),
   never posting secrets, security reports, bug reports, feature
-  requests, the development loop (`make`, `go test`, `go vet`,
-  `golangci-lint run`, `go mod tidy`, `make dev` for AWS KMS on floci), how features in
+  requests, the development loop (`make`, `make check` for every CI
+  check before a push, `make lint`, `make vuln`, `make dev` for AWS KMS
+  on floci), how features in
   `features/` describe behaviour, pull requests, AI-assisted
   contributions, and the MIT licence of contributions.
 - Security problems go to GitHub private vulnerability reporting

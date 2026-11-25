@@ -1,12 +1,12 @@
 ---
 type: Feature
 title: Make targets
-description: A Makefile builds the circe binary (default), the Docker image tagged with the latest git tag (docker, docker-push) and starts the floci dev container (dev); CI calls it.
+description: A Makefile builds the circe binary (default), the Docker image tagged with the latest git tag (docker, docker-push), starts the floci dev container (dev) and runs CI's checks locally (check, lint, vuln); CI calls it.
 status: stable
 code:
   - Makefile
 tags: [build, make]
-generated: { by: claude-code/claude-opus-5-5, at: 2026-10-23T21:00:35Z }
+generated: { by: claude-code/claude-opus-5-5, at: 2026-11-25T00:00:00Z }
 ---
 
 # Intent
@@ -35,6 +35,17 @@ CI, so CI does not repeat build commands of its own.
 - `make dev` starts the [floci dev environment](/build/dev-floci.md)
   with `docker compose up -d --wait` and returns once floci is healthy;
   `make dev-down` stops it and keeps its data volume.
+- `make vuln` runs [govulncheck](/build/dependencies.md) on `./...`
+  exactly as the Vulnerabilities workflow does
+  (`golang.org/x/vuln/cmd/govulncheck@latest` with `go run`).
+- `make lint` runs [golangci-lint](/build/lint.md) with `go run` at the
+  version pinned in `.github/workflows/lint.yml`, read from that file,
+  so a locally installed golangci-lint of another version is never used.
+  `GOLANGCI_LINT_VERSION` overrides it.
+- `make check` runs every check CI runs before a push, stopping at the
+  first failure: `go mod tidy -diff`, `build` (`go build ./...` and the
+  binary), `go vet ./...`, `go test ./...`, `lint`, `vuln`. Every check
+  runs with `CGO_ENABLED=0`, as in CI.
 - `make clean` removes `./circe` and `dist/`.
 - Targets that make no file are `.PHONY`; the binary is always rebuilt.
 
@@ -50,3 +61,8 @@ CI, so CI does not repeat build commands of its own.
   full history and tags (`fetch-depth: 0`); `dev` when there are none.
 - goreleaser keeps building release archives; the Makefile mirrors its
   flags rather than calling it, so `make` needs only Go.
+- **Local checks mirror CI** (user, 2026-11-25: run the pipeline's checks
+  before pushing). The workflows stay as they are; `make check` repeats
+  their commands. The golangci-lint version is read from `lint.yml` so
+  there is one pin to bump, and tools run with `go run` so `make check`
+  needs only Go.
